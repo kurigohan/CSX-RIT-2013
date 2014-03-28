@@ -1,0 +1,37 @@
+Board.java Testing
+=======================
+Created a seperate class for testing Board methods called TestBoard. Each time I added a new method to the 
+Board class I created a new method or added statements to the main method in the TestBoard class to test it. 
+
+Made a dozen different input.txt files to test possible scenarios such as extra spaces or invalid characters. 
+
+Command.java
+=======================
+Executed the commands used in the output example from the Project 1 specification page and compared my output to 
+the example output. 
+
+
+Cell.java, WaterCell.java, ShipCell.java, Ship.java
+=======================
+Simulated fire commands by calling hit methods manually and then viewed the results.
+
+Battleship.java
+=======================
+Since the Battleship class only contains the main method and prompt method, I tested Battleship by playing the game
+and checking for proper behavior from all the classes it uses.
+
+Error Cases Tested:
+ - invalid size argument
+ - out of range size argument ( size > 26 && size < 5)
+ - invalid file name argument
+ - more than 2 arguments
+ - no arguments
+ - overlapping coordinates in text file
+
+ Game commands:
+ - different case coordinates (e.g. a, Z)
+ - too many coordinate arguments
+ - too little coordinate arguments
+ - entering a number as a coordinate
+ - no input 
+ - extra spaces between, before, and after a command

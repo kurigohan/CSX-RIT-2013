@@ -1,0 +1,321 @@
+head	1.5;
+access;
+symbols;
+locks
+	andy:1.5; strict;
+comment	@# @;
+
+
+1.5
+date	2013.11.22.19.31.20;	author andy;	state Exp;
+branches;
+next	1.4;
+
+1.4
+date	2013.11.22.19.21.28;	author andy;	state Exp;
+branches;
+next	1.3;
+
+1.3
+date	2013.11.06.20.26.35;	author andy;	state Exp;
+branches;
+next	1.2;
+
+1.2
+date	2013.11.06.19.41.47;	author andy;	state Exp;
+branches;
+next	1.1;
+
+1.1
+date	2013.11.06.04.47.00;	author andy;	state Exp;
+branches;
+next	;
+
+
+desc
+@CSX Project 2 Part 1
+@
+
+
+1.5
+log
+@Added hashset to track visited configs in findSolution
+@
+text
+@/**
+ * The Solver class solves a puzzle using a BFS. 
+ *
+ * @@author Andy Nguyen
+ */
+
+import java.util.*;
+
+public class Solver<E> {
+    Puzzle<E> puzzle = null; // puzzle to solve
+    ArrayList<E> solution = new ArrayList<E>(); // solution to puzzle
+
+    /**
+     * Contructor for the Solver. Takes a puzzle.
+     *
+     * @@param myPuzzle      puzzle to solve
+     */
+    public Solver( Puzzle<E> myPuzzle ) {
+        puzzle = myPuzzle;
+    }
+
+    /**
+     * Finds the solution to the Puzzle.
+     * 
+     * @@return ArrayList containing the solution
+     */
+    public ArrayList<E> findSolution() {
+        // check for valid puzzle
+        if( puzzle == null ) {
+            return solution;
+        }
+
+        E start = puzzle.getStart(); 
+
+        boolean found = puzzle.isGoal( start ) ; // indiciates if goal reached (solution found)
+    
+        ArrayList<E> nextConfig = null; // next config
+        ArrayList<E> current = new ArrayList<E>(); // current config
+        current.add( start );
+
+        // list of paths that need to be visited
+        ArrayList<ArrayList<E>> queue = new ArrayList<ArrayList<E>>(); 
+        queue.add( current );
+
+        HashSet<E> visited = new HashSet<E>(); // set of visited configs
+        visited.add( start );
+
+        while( queue.size() > 0 && found == false ) {
+            current = queue.remove( 0 ); // dequeue the front element
+            // loop through each neighbor of the last element in current
+            for( E neighbor : puzzle.getNeighbors( current.get( current.size() - 1 ) ) )  {
+                // check if neighbor already visited
+                if( visited.contains( neighbor ) == false ) {
+                    // create the next config that contains current + the neighbor of current
+                    nextConfig = new ArrayList<E>( current ); 
+                    nextConfig.add( neighbor ); 
+
+                    // check if the neighbor is the goal
+                    if( puzzle.isGoal( neighbor ) ) {
+                        current = nextConfig;
+                        found = true;
+                        break; // break out of the for loop
+                    }
+                    else { // if goal not found, enqueue the next config and continue the loop
+                        queue.add( nextConfig );
+                        visited.add( neighbor );
+                    }
+               } 
+            } // end for loop
+        } // end while loop
+
+        if( found ) {
+            return solution = current;
+        }
+        else{ 
+            return solution;
+        }
+    }
+
+    /**
+     * Prints the solution in step-by-step format.
+     */
+    public void printSolution( ) {
+        int stepCount = 0; // step counter
+
+        if( solution.size() > 0 ) {
+            for( E s : solution ) {
+                System.out.println( "Step " + stepCount++ + ": " + s );
+            }
+        }
+        else {
+            System.out.println( "No solution." );
+        }
+    }
+
+}
+
+
+/*
+ * Solver.java
+ * 
+ * Version: 
+ *     $Id: Solver.java,v 1.4 2013/11/22 19:21:28 andy Exp andy $
+ * 
+ * Revisions: 
+ *     $Log: Solver.java,v $
+ *     Revision 1.4  2013/11/22 19:21:28  andy
+ *     Removed redundent code in findSolution
+ *
+ *     Revision 1.3  2013/11/06 20:26:35  andy
+ *     Added error checks and comments.
+ *
+ *     Revision 1.2  2013/11/06 19:41:47  andy
+ *     Implemented findSolution and printSolution methods.
+ *
+ *     Revision 1.1  2013/11/06 04:47:00  andy
+ *     Initial revision
+ *
+ *
+ */@
+
+
+1.4
+log
+@Removed redundent code in findSolution
+@
+text
+@d36 1
+a36 1
+        HashSet<E> visited = new HashSet<E>(); // set of visited configs
+d45 2
+d52 17
+a68 13
+                // create the next config that contains current + the neighbor of current
+                nextConfig = new ArrayList<E>( current ); 
+                nextConfig.add( neighbor ); 
+
+                // check if the neighbor is the goal
+                if( puzzle.isGoal( neighbor ) ) {
+                    current = nextConfig;
+                    found = true;
+                    break; // break out of the for loop
+                }
+                else { // if goal not found, enqueue the next config and continue the loop
+                    queue.add( nextConfig );
+                }
+d103 1
+a103 1
+ *     $Id: Solver.java,v 1.3 2013/11/06 20:26:35 andy Exp andy $
+d107 3
+@
+
+
+1.3
+log
+@Added error checks and comments.
+@
+text
+@d9 3
+a11 3
+public class Solver {
+
+    Puzzle puzzle = null; // puzzle to solve
+d14 1
+a14 1
+     * Contructor that takes a Puzzle.
+d16 1
+a16 1
+     * @@param      p      puzzle to solve
+d18 2
+a19 2
+    public Solver( Puzzle p ) {
+        puzzle = p;
+d23 1
+a23 1
+     * Finds the solution to the puzzle.
+d27 2
+a28 2
+    public ArrayList<Integer> findSolution() {
+        
+d30 1
+a30 1
+            return null;
+d33 1
+a33 6
+        int start = puzzle.getStart(); 
+        int goal = puzzle.getGoal();
+        boolean found = false;
+
+        ArrayList<Integer> config = new ArrayList<Integer>();
+        config.add( start ); 
+d35 5
+a39 3
+        if( start == goal ) {
+            return config;
+        }
+d41 3
+a43 5
+
+        ArrayList<Integer> nextConfig = null;
+        ArrayList<Integer> current = null;
+        ArrayList<ArrayList<Integer>> queue = new ArrayList<ArrayList<Integer>>();
+        queue.add( config );
+d49 3
+a51 3
+            for( int neighbor : puzzle.getNeighbors( current.get( current.size() - 1 ) ) )  {
+                // create the next config with the neighbor of current
+                nextConfig = new ArrayList<Integer>( current ); 
+d55 1
+a55 1
+                if( neighbor == goal ) {
+d67 1
+a67 1
+            return current;
+d70 1
+a70 1
+            return null;
+d75 1
+a75 3
+     * Prints a solution in step-by-step format.
+     *
+     * @@param      solution      the solution to print
+d77 1
+a77 1
+    public void printSolution( ArrayList<Integer> solution ) {
+d80 2
+a81 2
+        if( solution != null || solution.size() > 0 ) {
+            for( int s : solution ) {
+d97 1
+a97 1
+ *     $Id: Solver.java,v 1.2 2013/11/06 19:41:47 andy Exp andy $
+d101 3
+@
+
+
+1.2
+log
+@Implemented findSolution and printSolution methods.
+@
+text
+@d11 1
+a11 1
+    Puzzle puzzle = null;
+d13 5
+d22 5
+d28 5
+d79 5
+d85 3
+a87 2
+        int stepCount = 0;
+        if( solution != null ) {
+d104 1
+a104 1
+ *     $Id: Solver.java,v 1.1 2013/11/06 04:47:00 andy Exp andy $
+d108 3
+@
+
+
+1.1
+log
+@Initial revision
+@
+text
+@d2 1
+d7 1
+d11 1
+a11 1
+    public Solver() {
+d13 61
+d83 1
+a83 1
+ *     $Id$
+d86 4
+a89 1
+ *     $Log$
+@

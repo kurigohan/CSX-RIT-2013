@@ -1,0 +1,50 @@
+70 120 170 200 
+--- Midpoint ---
+optimal position:  135
+sum of distances customers must travel: 180
+--- Median ---
+optimal position:  145
+sum of distances customers must travel: 180
+--- Average ---
+optimal position:  140
+sum of distances customers must travel: 180
+
+5 10 35 125 135 
+--- Midpoint ---
+optimal position:  70
+sum of distances customers must travel: 280
+--- Median ---
+optimal position:  35
+sum of distances customers must travel: 245
+--- Average ---
+optimal position:  62
+sum of distances customers must travel: 272
+
+35 50 100 110 120 125 
+--- Midpoint ---
+optimal position:  80
+sum of distances customers must travel: 210
+--- Median ---
+optimal position:  105
+sum of distances customers must travel: 170
+--- Average ---
+optimal position:  90
+sum of distances customers must travel: 190
+
+100 200 300 400 500 600 700 
+--- Midpoint ---
+optimal position:  400
+sum of distances customers must travel: 1200
+--- Median ---
+optimal position:  400
+sum of distances customers must travel: 1200
+--- Average ---
+optimal position:  400
+sum of distances customers must travel: 1200
+
+
+
+Conclusion:
+
+The median method is the best for calculating the optimal position. The distance traveled found when using the median method is always less than or equal to the midpoint and average method.
+

@@ -1,0 +1,221 @@
+head	1.5;
+access;
+symbols;
+locks; strict;
+comment	@# @;
+
+
+1.5
+date	2013.09.15.00.48.02;	author agn3691;	state Exp;
+branches;
+next	1.4;
+
+1.4
+date	2013.09.12.23.52.11;	author agn3691;	state Exp;
+branches;
+next	1.3;
+
+1.3
+date	2013.09.12.23.21.14;	author agn3691;	state Exp;
+branches;
+next	1.2;
+
+1.2
+date	2013.09.12.23.16.54;	author agn3691;	state Exp;
+branches;
+next	1.1;
+
+1.1
+date	2013.09.12.22.47.24;	author agn3691;	state Exp;
+branches;
+next	;
+
+
+desc
+@Test PhoneBill, LongDistancePhoneBill, and CellPhoneBill classes.
+@
+
+
+1.5
+log
+@Fixed typos.
+@
+text
+@/*
+ * TestPhoneBill.java
+ * 
+ * Version: 
+ *     $Id: TestPhoneBill.java,v 1.4 2013/09/12 23:52:11 agn3691 Exp agn3691 $
+ * 
+ * Revisions: 
+ *     $Log: TestPhoneBill.java,v $
+ *     Revision 1.4  2013/09/12 23:52:11  agn3691
+ *     Changed test cases to match try output.
+ *
+ *     Revision 1.3  2013/09/12 23:21:14  agn3691
+ *     Removed unneeded code.
+ *
+ *     Revision 1.1  2013/09/12 22:47:24  agn3691
+ *     Initial revision
+ *
+ */
+
+/**
+ * The TestPhoneBill class tests the classes PhoneBill, LongDistancePhoneBill, and CellPhoneBill.
+ *
+ * @@author Andy Nguyen
+ */
+
+public class TestPhoneBill {
+
+	public static void main( String args[] ){
+		testCell(19.95, 1.0, 10, 10);
+		testLongDist(10.0, .05, 25);
+
+		testCell(59.849999999999994, 1.0, 30, 40);
+		testLongDist(10.0, .05, 55);
+
+		testCell(99.75, 1.0, 50, 70);
+		testLongDist(10.0, .05, 85);
+
+		testCell(139.65, 1.0, 70, 100);
+		testLongDist(10.0, 0.05, 115);
+
+	/* My Tests
+		// test variables
+		double monthlyRate = 10.0, callRate = 1.0;
+		int callTime = 100, freeTime = 10;
+		System.out.println("Test variables\n==========");
+		System.out.println("monthlyRate:\t" + monthlyRate);
+		System.out.println("callRate:\t" + callRate);
+		System.out.println("callTime:\t" + callTime);
+		System.out.println("freeTime:\t" + freeTime);
+
+		// test LongDistancePhoneBill class
+		LongDistancePhoneBill ldpb = new LongDistancePhoneBill(monthlyRate, callRate);
+		System.out.println("\nLongDistancePhoneBill class tests\n==========");
+		System.out.println("getMonthlyRate(): " + ldpb.getMonthlyRate()); 
+		System.out.println("getRatePerMinute(): " + ldpb.getRatePerMinute()); 
+		System.out.println("calculateBill(callTime): " + ldpb.calculateBill(callTime));
+		System.out.println("toString(): " + ldpb);  
+
+		// test LongDistancePhoneBill class
+		CellPhoneBill cpb = new CellPhoneBill(monthlyRate, callRate, freeTime);
+		System.out.println("\nCellPhoneBill class tests\n==========");
+		System.out.println("getMonthlyRate(): " + cpb.getMonthlyRate()); 
+		System.out.println("getRatePerMinute(): " + cpb.getRatePerMinute()); 
+		System.out.println("getFreeTime(): " + cpb.getFreeTime());
+		System.out.println("calculateBill(callTime): " + cpb.calculateBill(callTime));
+		// test callTime < freeTime
+		System.out.println("calculateBill(5): " + cpb.calculateBill(5));
+		System.out.println("toString(): " + cpb);  
+	*/
+	}
+
+	private static void testCell(double monthlyRate, double callRate, 
+									int freeTime, int callTime){
+		CellPhoneBill cpb = new CellPhoneBill(monthlyRate, callRate, freeTime);
+		System.out.println(cpb);
+		System.out.println("  My monthly rate is: " + cpb.getMonthlyRate());
+		System.out.println("  My free time is: " + cpb.getFreeTime());
+		System.out.println("  My rate per minute is: " + cpb.getRatePerMinute());
+		System.out.println("  The bill for " + callTime + " minutes is: " 
+									+ cpb.calculateBill(callTime));
+		System.out.println("\n");
+	}
+
+	private static void testLongDist(double monthlyRate, double callRate, 
+									int callTime){
+		LongDistancePhoneBill ldpb = new LongDistancePhoneBill(monthlyRate, callRate);
+		System.out.println(ldpb);
+		System.out.println("  My monthly rate is: " + ldpb.getMonthlyRate());
+		System.out.println("  My rate per minute is: " + ldpb.getRatePerMinute());
+		System.out.println("  The bill for " + callTime + " minutes is: " 
+												+ ldpb.calculateBill(callTime));
+		System.out.println();
+	}
+
+
+}@
+
+
+1.4
+log
+@Changed test cases to match try output.
+@
+text
+@d5 1
+a5 1
+ *     $Id: TestPhoneBill.java,v 1.3 2013/09/12 23:21:14 agn3691 Exp agn3691 $
+d8 4
+a11 1
+ *     $Log: TestPhoneBill.java,v $
+@
+
+
+1.3
+log
+@Removed unneeded code.
+@
+text
+@d5 1
+a5 1
+ *     $Id: TestPhoneBill.java,v 1.1 2013/09/12 22:47:24 agn3691 Exp agn3691 $
+d9 3
+d26 13
+d66 2
+d69 10
+d81 10
+@
+
+
+1.2
+log
+@Added additional test cases.
+@
+text
+@a38 2
+		System.out.println("super.toString(): " + super.ldpb);  
+
+@
+
+
+1.1
+log
+@Initial revision
+@
+text
+@d5 1
+a5 1
+ *     $Id$
+d8 4
+a11 1
+ *     $Log$
+d22 1
+a22 1
+	public static void main( args[] ){
+d24 7
+a30 12
+		double monthlyRate = 10.0, callRate = 0.10;
+		int freeTime = 100;
+		System.out.println('Test variables\n==========')
+		System.out.println('monthlyRate: ' + monthlyRate);
+		System.out.println('callRate: ' + callRate);
+		System.out.println('freeTime: ' + freeTime);
+
+		// test PhoneBill class
+		PhoneBill pb = new PhoneBill(monthlyRate);
+		System.out.println('PhoneBill class tests\n==========')
+		System.out.println('getMonthlyRate: ' + pb.getMonthlyRate()); 
+		System.out.println('toString: ' + pb);  
+d34 7
+a40 3
+		System.out.println('LongDistancePhoneBill class tests\n==========')
+		System.out.println('getMonthlyRate: ' + ldpb.getMonthlyRate()); 
+		System.out.println('toString: ' + ldpb);  
+d44 9
+a52 3
+		System.out.println('CellPhoneBill class tests\n==========')
+		System.out.println('getMonthlyRate: ' + cpb.getMonthlyRate()); 
+		System.out.println('toString: ' + cpb);  
+@

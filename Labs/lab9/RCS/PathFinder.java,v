@@ -1,0 +1,162 @@
+head	1.2;
+access;
+symbols;
+locks
+	andy:1.2; strict;
+comment	@# @;
+
+
+1.2
+date	2013.10.29.17.42.23;	author andy;	state Exp;
+branches;
+next	1.1;
+
+1.1
+date	2013.10.29.17.37.01;	author andy;	state Exp;
+branches;
+next	;
+
+
+desc
+@Driver program for DFSGraph
+@
+
+
+1.2
+log
+@Comments
+@
+text
+@/**
+ * PathFinder is the driver program for DFSGraph.java
+ * @@author Andy Nguyen
+ */
+
+import java.io.*;
+
+public class PathFinder {
+
+    /**
+     *  Main method that runs the program
+     */
+    public static void main( String args[] ) throws IOException {
+        if( args.length > 0 ) {
+            String fileName = args[0];
+            DFSGraph graph = readFile( fileName );
+            System.out.println( "The graph is: " );
+            System.out.println( graph );
+            System.out.println();
+            prompt( graph );
+        }
+        else{
+            System.err.println( "Usage: java PathFinder fileName" );
+        }
+    }
+
+    /**
+     * Prompt user for input. 
+     */
+    private static void prompt( DFSGraph graph ) throws IOException {
+        try{
+            BufferedReader br = new BufferedReader( new InputStreamReader(System.in) );
+            String source = null, destination = null, path = null;
+            System.out.println("Enter source (or 'quit') and destination when prompted." );
+            while( true ) {
+                System.out.println();
+                System.out.print( "Source: " );
+                source = br.readLine();
+
+                if( source.toLowerCase().equals( "quit" ) ) {
+                    break;
+                }
+
+                System.out.print( "Destination: ");
+                destination = br.readLine();
+
+                System.out.println();
+                System.out.println( source + " to " + destination + " is: ");
+                System.out.println( graph.findPath( source, destination ) );
+
+                System.out.println();
+            }
+        }
+        catch( IOException e ) {
+            System.err.println( e );
+            System.exit( -1 );
+        }
+    }
+
+    /**
+     *  Read a text file and create and return a DFSGraph object from the data.
+     *
+     * @@return DFSGraph object 
+     */
+    private static DFSGraph readFile( String fileName ) throws IOException {
+        String line; 
+        BufferedReader br = null;
+        DFSGraph graph = null;
+        String[] nodes = null;
+        try{
+            br =  new BufferedReader ( new FileReader( fileName ) ) ; 
+            graph  = new DFSGraph(); 
+
+            while ( ( line = br.readLine() ) != null ) {
+                line = line.trim().replaceAll("\\s{2,}", " "); // remove excess spaces
+                nodes = line.split(" "); // split the line into an array of strings
+              //  System.out.println( line );
+                graph.add( nodes[0], nodes[1] );
+                graph.add( nodes[1], nodes[0] );
+
+            }
+        }
+        catch( IOException e ) {
+            System.err.println( "Could not open file." );
+            System.exit( -1 );
+        }
+        finally {
+            if ( br != null ) {
+                br.close(); // close the file
+            }
+        }
+
+        return graph;
+
+    }
+}
+
+/*
+ * PathFinder.java
+ * 
+ * Version: 
+ *     $Id: PathFinder.java,v 1.1 2013/10/29 17:37:01 andy Exp andy $
+ * 
+ * Revisions: 
+ *     $Log: PathFinder.java,v $
+ *     Revision 1.1  2013/10/29 17:37:01  andy
+ *     Initial revision
+ *
+ */@
+
+
+1.1
+log
+@Initial revision
+@
+text
+@d2 1
+a2 1
+ *
+d7 1
+d9 4
+d27 3
+d39 1
+d43 1
+d46 1
+d60 5
+d102 1
+a102 1
+ *     $Id$
+d105 4
+a108 1
+ *     $Log$
+@

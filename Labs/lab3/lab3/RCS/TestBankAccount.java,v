@@ -1,0 +1,254 @@
+head	1.6;
+access;
+symbols;
+locks; strict;
+comment	@# @;
+
+
+1.6
+date	2013.09.15.03.52.01;	author agn3691;	state Exp;
+branches;
+next	1.5;
+
+1.5
+date	2013.09.15.03.48.59;	author agn3691;	state Exp;
+branches;
+next	1.4;
+
+1.4
+date	2013.09.15.03.45.40;	author agn3691;	state Exp;
+branches;
+next	1.3;
+
+1.3
+date	2013.09.15.03.35.47;	author agn3691;	state Exp;
+branches;
+next	1.2;
+
+1.2
+date	2013.09.15.03.23.34;	author agn3691;	state Exp;
+branches;
+next	1.1;
+
+1.1
+date	2013.09.15.03.00.06;	author agn3691;	state Exp;
+branches;
+next	;
+
+
+desc
+@Test BankAccount hierachy
+@
+
+
+1.6
+log
+@Colon was in the wrong place.
+@
+text
+@/*
+ * TestBankAccount.java
+ * 
+ * Version: 
+ *     $Id: TestBankAccount.java,v 1.5 2013/09/15 03:48:59 agn3691 Exp agn3691 $
+ * 
+ * Revisions: 
+ *     $Log: TestBankAccount.java,v $
+ *     Revision 1.5  2013/09/15 03:48:59  agn3691
+ *     Fixed a println statement in printReport to match try output.
+ *
+ *     Revision 1.4  2013/09/15 03:45:40  agn3691
+ *     Added java doc comments.
+ *
+ *     Revision 1.3  2013/09/15 03:35:47  agn3691
+ *     Fixed printReport method to properly display interest earned.
+ *
+ *     Revision 1.2  2013/09/15 03:23:34  agn3691
+ *     Implement methods to create accounts and print interest report.
+ *
+ *     Revision 1.1  2013/09/15 03:00:06  agn3691
+ *     Initial revision
+ *
+ *
+ */
+
+/**
+ * The TestBankAccount class tests the polymorphic behavior of the BankAccount class hierarchy. 
+ * 
+ * @@author Andy Nguyen
+ */
+
+import java.util.*;
+public class TestBankAccount {
+
+	public static void main( String args[] ) {
+		String command = "";
+		if( args.length > 0 ) {
+			command = args[0];
+		}
+		else {
+			System.err.println( "Usage: java TestBankAccount AccountTypeList" );
+		}
+
+		List<BankAccount> accounts = createAccounts( command );
+		printReport( accounts, 3 );
+
+	}
+
+
+	/**
+ 	* Create the bank accounts.
+ 	* 
+ 	* @@param      command      string indicating type of accounts to create
+ 	* @@return                   list of bank accounts
+ 	*/
+	private static List<BankAccount> createAccounts( String command ) {
+		int balance = 500; // account balance
+		List<BankAccount> accounts = new ArrayList<BankAccount>(); // list of accounts
+
+		for( int i = 0; i < command.length(); ++i ) {
+			switch(command.charAt(i)){
+				case 'c': 
+					accounts.add( new CheckingAccount( balance ) );
+					balance += 400;
+					break;
+				case 's':
+					accounts.add( new SavingsAccount( balance ) );
+					balance += 400;
+					break;
+				case 'm':
+					accounts.add( new MoneyMarket( balance ) );
+					balance += 400;
+					break;
+				default:
+					System.err.println( command.charAt(i) + " command not recognized");
+					break;
+			}
+		}
+
+		return accounts;
+	}
+
+	/**
+ 	* Print the interest report for all the bank accounts.
+ 	* 
+ 	* @@param      accounts      list of bank accounts
+ 	* @@param      timeSpan      number of months to show
+ 	*/
+	private static void printReport( List<BankAccount> accounts, int timeSpan) {
+		// used to calculate interestedEarned since the provided BankAccount class 
+		// doesn't provide a getter method for it for whatever reason
+		int initialBalance = 0; 
+
+		for( int i = 1; i <= timeSpan; ++i ) {
+			System.out.println( "Month " + i + ":");
+		
+			for( BankAccount acc : accounts ) {
+				System.out.println( "Account Type: " + acc );
+				initialBalance = acc.getCurrentBalance();
+				System.out.println( "Initial Balance: " + initialBalance );
+				acc.earnInterest(); // tell account to earn interest
+				System.out.println( "Interest Earned: " + (acc.getCurrentBalance()-initialBalance) ); 
+				System.out.println( "Total Deposits: " + acc.getTotalDeposits() );
+				System.out.println( "Total Withdrawn: " + acc.getTotalWithdrawn() );
+				System.out.println( "Current Balance: " + acc.getCurrentBalance() );
+				acc.newMonth();
+				System.out.println();
+			}
+			System.out.println();
+		}
+	}       
+
+} // end TestBankAccount@
+
+
+1.5
+log
+@Fixed a println statement in printReport to match try output.
+@
+text
+@d5 1
+a5 1
+ *     $Id: TestBankAccount.java,v 1.4 2013/09/15 03:45:40 agn3691 Exp agn3691 $
+d9 3
+d96 1
+a96 1
+			System.out.println( "Month: " + i );
+@
+
+
+1.4
+log
+@Added java doc comments.
+@
+text
+@d5 1
+a5 1
+ *     $Id: TestBankAccount.java,v 1.3 2013/09/15 03:35:47 agn3691 Exp agn3691 $
+d9 3
+d93 1
+a93 1
+			System.out.println( "Month " + i );
+@
+
+
+1.3
+log
+@Fixed printReport method to properly display interest earned.
+@
+text
+@d5 1
+a5 1
+ *     $Id: TestBankAccount.java,v 1.2 2013/09/15 03:23:34 agn3691 Exp agn3691 $
+d9 3
+d44 7
+d78 6
+d106 1
+a106 1
+	}
+@
+
+
+1.2
+log
+@Implement methods to create accounts and print interest report.
+@
+text
+@d5 1
+a5 1
+ *     $Id: TestBankAccount.java,v 1.1 2013/09/15 03:00:06 agn3691 Exp agn3691 $
+d9 3
+d69 4
+d78 4
+a81 3
+				System.out.println( "Initial Balance: " + acc.getCurrentBalance() );
+				acc.earnInterest();
+				System.out.println( "Interest Earned: " + acc.getInterestEarned() );
+@
+
+
+1.1
+log
+@Initial revision
+@
+text
+@d5 1
+a5 1
+ *     $Id$
+d8 4
+a11 1
+ *     $Log$
+d33 6
+d41 1
+d62 19
+a80 3
+		/*
+		for(BankAccount acc : accounts) {
+			System.out.println( acc +": " + acc.getCurrentBalance() );
+a81 3
+		*/
+
+
+d84 1
+a84 1
+}@

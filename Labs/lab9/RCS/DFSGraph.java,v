@@ -1,0 +1,420 @@
+head	1.6;
+access;
+symbols;
+locks
+	andy:1.6; strict;
+comment	@# @;
+
+
+1.6
+date	2013.10.29.17.46.37;	author andy;	state Exp;
+branches;
+next	1.5;
+
+1.5
+date	2013.10.29.16.36.02;	author andy;	state Exp;
+branches;
+next	1.4;
+
+1.4
+date	2013.10.29.16.25.33;	author andy;	state Exp;
+branches;
+next	1.3;
+
+1.3
+date	2013.10.29.15.57.38;	author andy;	state Exp;
+branches;
+next	1.2;
+
+1.2
+date	2013.10.29.14.46.32;	author andy;	state Exp;
+branches;
+next	1.1;
+
+1.1
+date	2013.10.29.13.44.20;	author andy;	state Exp;
+branches;
+next	;
+
+
+desc
+@lab 9 Depth First Search Graph
+@
+
+
+1.6
+log
+@Comments
+@
+text
+@/**
+ * DFSGraph represents a depth first search graph.
+ *
+ * @@author Andy Nguyen
+ */
+
+import java.util.*;
+
+public class DFSGraph implements Graph {
+    Map<String, List<String>> graph;
+
+    /*
+        Main method which is used to test the class methods
+    */
+    public static void main( String args[] ) {
+        String start, finish;
+        if( args.length > 1 ){
+            start = args[0];
+            finish = args[1];
+
+            DFSGraph test = new DFSGraph();
+            // Test add and toString method
+            test.add("A", "B");
+            test.add("B", "A");
+
+            test.add("A", "C");
+            test.add("C", "A");
+
+            test.add("C", "F");
+            test.add("F", "C");
+
+            test.add("B", "D");
+            test.add("D", "B");
+
+            test.add("A", "G");
+            test.add("G", "A");
+
+            test.add("G", "F");
+            test.add("F", "G");
+
+            test.add("F", "E");
+            test.add("E", "F");
+
+            System.out.println( test );
+
+           System.out.println( test.findPath( start ,  finish) );
+        }
+        else{
+            System.err.println("Usage: DFSGraph start finish");
+        }
+
+    }
+
+    /*  
+        Default constructor for the DFSGraph. 
+    */
+   public DFSGraph( )  {
+        graph = new HashMap<String, List<String>> (); 
+   }
+
+
+    /*
+        Routine to find a path from "node" to "finish". The visited list
+        keeps track of the nodes in the path. Returns true if a path is
+        found, false otherwise.
+    */
+    public List<String> visitDFS( String node, List<String> visited, String finish ) {
+        List<String> path = new ArrayList<String>();
+
+        if( node.equals( finish ) ) {
+            path.add( node );
+            return path;
+        }
+        //check if node exists in graph
+        if( graph.containsKey( node ) ) {
+            // get list of neighbors
+            List<String> neighbors = graph.get( node );
+            //interate through neighbors and check if neighbor in visited
+            for( String n : neighbors ) {
+                if( visited.contains( n ) == false ) {
+                        visited.add( n );
+                        List<String> subpath = visitDFS( n, visited, finish );
+
+                        // if valid subpath returned, add node to subpath and return 
+                        // the new subpath
+                        if( subpath.size() > 0 ){
+                            subpath.add( 0, node );
+                            return subpath;
+                        }
+                } // end if visited contains n
+            } // end for
+        } // end if neighbors.size > 0
+
+        return path;
+
+    }
+
+    /*
+        Find a path from "source" to "destination". Returns a comma 
+        separated String listing each of the nodes in the path.
+    */
+    public String findPath( String start, String finish )  {
+        List<String> visited = new ArrayList<String>();
+        String pathStr = "" ;
+        visited.add( start );   // add starting node to visited
+        List<String> path = visitDFS( start, visited, finish ) ;
+        if( path.size() > 0 ) {
+            for( String node :  path ) {
+                pathStr += node + ", ";
+            }
+            pathStr = pathStr.substring( 0, pathStr.length() - 2 );
+        }
+        else{
+            pathStr = "None";
+        }
+        return pathStr;
+    }
+
+
+    /*
+        Add "source" and "destination" nodes to the graph. Note that
+        this is an undirected graph, so add the nodes in both directions.
+    */
+    public void add( String key, String value )  {
+        List<String> neighbors = null; // list of neighbors for the node
+
+        // if key exists in the hashmap, get the list and add value to it 
+        if( graph.containsKey( key ) ){
+            neighbors = graph.get( key );
+            neighbors.add( value );
+        }
+        else { // otherwise create a new list containing value
+            neighbors = new ArrayList<String> ();
+            neighbors.add( value );
+        }            
+
+        graph.put( key, neighbors ); // add neighbors list to the graph 
+
+    }
+
+
+
+    /*
+        Converts a graph to a string representation consisting of the node,
+        followed by a ':' followed by a ' ' followed by a comma separated
+        list of neighbors.
+    */
+    public String toString( )  {
+        String str = "";
+        String node;
+        for( Map.Entry<String, List<String>> entry : graph.entrySet() ) {
+            node = entry.getKey();
+            str += node + ": ";
+            for( String neighbor : entry.getValue() ) {
+                str += neighbor + ", ";
+            }
+            // remove trailing comma and add new line
+            str = str.substring( 0, str.length() - 2 ) + "\n";
+        }
+        // return the string with the trailing \n removed
+        return str.substring(0, str.length() - 1 );
+    }
+
+}
+
+
+/*
+ * DFSGraph.java
+ * 
+ * Version: 
+ *     $Id: DFSGraph.java,v 1.5 2013/10/29 16:36:02 andy Exp andy $
+ * 
+ * Revisions: 
+ *     $Log: DFSGraph.java,v $
+ *     Revision 1.5  2013/10/29 16:36:02  andy
+ *     Fixed print format
+ *
+ *     Revision 1.4  2013/10/29 16:25:33  andy
+ *     changed visitDFS to return path from start to finish
+ *
+ *     Revision 1.3  2013/10/29 15:57:38  andy
+ *     implemented visitDFS with boolean return type
+ *
+ *     Revision 1.2  2013/10/29 14:46:32  andy
+ *     Implemented add and toString method.
+ *
+ *     Revision 1.1  2013/10/29 13:44:20  andy
+ *     Initial revision
+ *
+ *
+ */@
+
+
+1.5
+log
+@Fixed print format
+@
+text
+@d2 1
+a66 27
+    public Boolean visitDFS2( String node, List<String> visited, String finish ) {
+        Boolean found = false;
+        // add starting node to visited
+        if( visited.size() == 0 ) {
+            visited.add( node );
+        }
+      //  printList(visited);
+        if( node.equals( finish ) ) {
+            return true;
+        }
+        System.out.println( visited );
+
+        if( graph.containsKey( node  ) ) {
+            List<String> neighbors = graph.get( node );
+            for( String n : neighbors ) {
+                if( visited.contains( n ) == false && found == false ) {
+                    visited.add( n );
+                    System.out.println("Visit: " + n );
+                    found = visitDFS2( n, visited, finish );
+                } // end if visited contains n
+            } // end for
+        } // end if neighbors.size > 0
+
+        return found;
+
+    }
+
+d74 3
+a76 3
+        //System.out.println( visited );
+
+        if( graph.containsKey( node  ) ) {
+d78 1
+d83 3
+d171 1
+a171 1
+ *     $Id: DFSGraph.java,v 1.4 2013/10/29 16:25:33 andy Exp andy $
+d175 3
+@
+
+
+1.4
+log
+@changed visitDFS to return path from start to finish
+@
+text
+@d23 1
+a23 1
+           // test.add("B", "A");
+d45 1
+a45 1
+           System.out.println( test.visitDFS( start , new ArrayList<String>(), finish) );
+a94 4
+        // add starting node to visited
+        if( visited.size() == 0 ) {
+            visited.add( node );
+        }
+d120 21
+d163 1
+a163 11
+    /*
+        Find a path from "source" to "destination". Returns a comma 
+        separated String listing each of the nodes in the path.
+    */
+    public String findPath( String start, String finish )  {
+        List<String> visited = new ArrayList<String>();
+        visited.add( start );
+        visitDFS( start, visited, finish );
+      //  if( visitDFS == )
+        return null;
+    }
+d177 1
+a177 1
+                str += neighbor + ",";
+d180 1
+a180 1
+            str = str.substring( 0, str.length() - 1 ) + "\n";
+d193 1
+a193 1
+ *     $Id: DFSGraph.java,v 1.3 2013/10/29 15:57:38 andy Exp andy $
+d197 3
+@
+
+
+1.3
+log
+@implemented visitDFS with boolean return type
+@
+text
+@d23 2
+d26 5
+a31 2
+    //        test.add("B", "A");
+      //      test.add("C", "A");
+d33 10
+d66 1
+a66 1
+    public Boolean visitDFS( String node, List<String> visited, String finish ) {
+d84 1
+a84 1
+                    found = visitDFS( n, visited, finish );
+d93 31
+d186 1
+a186 1
+ *     $Id: DFSGraph.java,v 1.2 2013/10/29 14:46:32 andy Exp andy $
+d190 3
+@
+
+
+1.2
+log
+@Implemented add and toString method.
+@
+text
+@d15 14
+a28 1
+        DFSGraph test = new DFSGraph();
+d30 5
+a34 5
+        // Test add and toString method
+        test.add("A", "B");
+        test.add("A", "C");
+        test.add("B", "D");
+        System.out.println( test );
+d51 11
+a61 2
+    private Boolean visitDFS( String node, List<String> visited, String finish ) {
+        return false;
+d63 10
+a72 1
+    }
+d74 1
+d76 1
+d105 4
+d140 1
+a140 1
+ *     $Id: DFSGraph.java,v 1.1 2013/10/29 13:44:20 andy Exp andy $
+d144 3
+@
+
+
+1.1
+log
+@Initial revision
+@
+text
+@d9 1
+d12 15
+a26 4
+        Default constructor for the DFSGraph. Should initialize the 
+        data structure that is being used to represent the graph. Note
+        that it is commented out, here, because it doesn't really belong
+        in the interface.
+d29 1
+a29 1
+
+d36 1
+a36 2
+        found, false otherwise. Note that it is commented out, here, 
+        because it doesn't really belong in the interface.
+d51 13
+d81 13
+a93 1
+        return null;
+d103 1
+a103 1
+ *     $Id$
+d106 4
+a109 1
+ *     $Log$
+@

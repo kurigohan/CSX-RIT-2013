@@ -1,0 +1,310 @@
+head	1.6;
+access;
+symbols;
+locks
+	andy:1.6; strict;
+comment	@# @;
+
+
+1.6
+date	2013.11.25.02.35.47;	author andy;	state Exp;
+branches;
+next	1.5;
+
+1.5
+date	2013.11.25.01.55.52;	author andy;	state Exp;
+branches;
+next	1.4;
+
+1.4
+date	2013.11.25.01.54.24;	author andy;	state Exp;
+branches;
+next	1.3;
+
+1.3
+date	2013.11.25.01.40.00;	author andy;	state Exp;
+branches;
+next	1.2;
+
+1.2
+date	2013.11.25.01.29.53;	author andy;	state Exp;
+branches;
+next	1.1;
+
+1.1
+date	2013.11.25.01.28.41;	author andy;	state Exp;
+branches;
+next	;
+
+
+desc
+@lab 13 activity 3
+@
+
+
+1.6
+log
+@Implemented rest of methods.
+@
+text
+@/**
+ * A GUI that displays dialog boxes.
+ *
+ * @@author Andy Nguyen
+ */
+
+import javax.swing.*;
+import java.awt.*;
+
+public class  DialogViewer {
+
+    /**
+     * Displays a dialog box corresponding to the command given.
+     *
+     * @@param command      indicates the type of dialog to display
+     */
+    public void displayDialog( String command ) {
+        switch( command ) {
+            case "f": 
+                displayFileChooserDialog();
+                break;
+
+            case "c": 
+                displayConfirmDialog();
+                break;
+
+            case "m": 
+                displayMessageDialog();
+                break;
+
+            default: 
+                System.err.println( "Usage: java DialogViewer f/c/m" );
+                break;
+        }
+
+        System.exit( 0 );
+    }
+
+    /**
+     * Display a file chooser dialog.
+     */
+    private void displayFileChooserDialog() {
+        JFileChooser chooser = new JFileChooser();
+        int selection = chooser.showOpenDialog( null );
+
+        // print file name if a file is selected
+        if( selection == JFileChooser.APPROVE_OPTION ) {
+            System.out.println( chooser.getSelectedFile() );
+        } 
+        else {
+            System.out.println( "No file selected." );
+        }
+    }
+
+    /**
+     * Display a confimation dialog.
+     */
+    private void displayConfirmDialog() {
+        int selection = JOptionPane.showConfirmDialog( null, "Are you sure?", "Confirmation Dialog", 
+                                                                                            JOptionPane.YES_NO_CANCEL_OPTION );
+        
+        switch( selection ) {
+            case 0: 
+                System.out.println( "Selected 'Yes'" );
+                break;
+            case 1: 
+                System.out.println( "Selected 'No'" );
+                break;
+            case 2:
+                System.out.println( "Selected 'Cancel'" );
+                break;
+            case -1:
+                System.out.println( "Confirmation dialog closed." );
+                break;
+        }        
+    }
+
+    /**
+     * Display a message dialog.
+     */
+    private void displayMessageDialog() {
+        JOptionPane.showMessageDialog( null, "Andy", "Message Dialog", 
+                                                                     JOptionPane.INFORMATION_MESSAGE );
+    }
+
+
+
+    public static void main( String[] args ) {
+        if( args.length > 0 ) {
+            DialogViewer viewer = new DialogViewer();
+            viewer.displayDialog( args[0] );
+        } 
+        else {
+            System.err.println( "Usage: java DialogViewer f/c/m" );
+        }
+    }
+
+}
+
+
+/*
+ * DialogViewer.java
+ * 
+ * Version: 
+ *     $Id: DialogViewer.java,v 1.5 2013/11/25 01:55:52 andy Exp andy $
+ * 
+ * Revisions: 
+ *     $Log: DialogViewer.java,v $
+ *     Revision 1.5  2013/11/25 01:55:52  andy
+ *     renamed methods.
+ *
+ *     Revision 1.4  2013/11/25 01:54:24  andy
+ *     implemented displayFileChooserDialog
+ *
+ *     Revision 1.3  2013/11/25 01:40:00  andy
+ *     implemented displayDialog method.
+ *
+ *     Revision 1.2  2013/11/25 01:29:53  andy
+ *     skeleton.
+ *
+ *     Revision 1.1  2013/11/25 01:28:41  andy
+ *     Initial revision
+ *
+ *
+ */@
+
+
+1.5
+log
+@renamed methods.
+@
+text
+@d10 1
+a10 1
+public class  DialogViewer extends JFrame {
+d12 5
+d32 1
+a32 1
+                System.out.println( "Invalid command." );
+d35 2
+a36 1
+        this.dispose(); // exit program
+d39 3
+d44 1
+a44 1
+        int selection = chooser.showOpenDialog( this );
+d46 1
+d55 3
+d59 17
+a75 1
+
+d78 3
+d82 2
+a83 1
+
+d94 1
+a94 1
+            System.err.println( "Usage: java DialogViewer command" );
+d105 1
+a105 1
+ *     $Id: DialogViewer.java,v 1.4 2013/11/25 01:54:24 andy Exp andy $
+d109 3
+@
+
+
+1.4
+log
+@implemented showFileChooserDialog
+@
+text
+@d12 1
+a12 1
+    public void showDialog( String command ) {
+d15 1
+a15 1
+                showFileChooserDialog();
+d19 1
+a19 1
+                showConfirmDialog();
+d23 1
+a23 1
+                showMessageDialog();
+d33 1
+a33 1
+    private void showFileChooserDialog() {
+d45 1
+a45 1
+    private void showConfirmDialog() {
+d49 1
+a49 1
+    private void showMessageDialog() {
+d58 1
+a58 1
+            viewer.showDialog( args[0] );
+d72 1
+a72 1
+ *     $Id: DialogViewer.java,v 1.3 2013/11/25 01:40:00 andy Exp andy $
+d76 3
+d80 1
+a80 1
+ *     implemented showDialog method.
+@
+
+
+1.3
+log
+@implemented showDialog method.
+@
+text
+@d10 1
+a10 1
+public class  DialogViewer {
+d30 1
+a30 1
+
+d34 2
+d37 6
+d58 1
+a58 1
+            viewer..showDialog( args[0] );
+d72 1
+a72 1
+ *     $Id: DialogViewer.java,v 1.2 2013/11/25 01:29:53 andy Exp andy $
+d76 3
+@
+
+
+1.2
+log
+@skeleton.
+@
+text
+@d11 31
+a41 2
+    
+    public DialogViewer () {
+d48 7
+a54 1
+
+d64 1
+a64 1
+ *     $Id: DialogViewer.java,v 1.1 2013/11/25 01:28:41 andy Exp andy $
+d68 3
+@
+
+
+1.1
+log
+@Initial revision
+@
+text
+@d11 2
+d14 1
+d17 5
+d29 1
+a29 1
+ *     $Id$
+d32 4
+a35 1
+ *     $Log$
+@

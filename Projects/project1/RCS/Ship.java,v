@@ -1,0 +1,305 @@
+head	1.7;
+access;
+symbols;
+locks
+	agn3691:1.7; strict;
+comment	@# @;
+
+
+1.7
+date	2013.09.22.00.25.04;	author agn3691;	state Exp;
+branches;
+next	1.6;
+
+1.6
+date	2013.09.21.22.45.12;	author agn3691;	state Exp;
+branches;
+next	1.5;
+
+1.5
+date	2013.09.21.18.40.14;	author agn3691;	state Exp;
+branches;
+next	1.4;
+
+1.4
+date	2013.09.21.07.14.32;	author agn3691;	state Exp;
+branches;
+next	1.3;
+
+1.3
+date	2013.09.21.02.06.47;	author agn3691;	state Exp;
+branches;
+next	1.2;
+
+1.2
+date	2013.09.19.23.26.51;	author agn3691;	state Exp;
+branches;
+next	1.1;
+
+1.1
+date	2013.09.18.20.36.00;	author agn3691;	state Exp;
+branches;
+next	;
+
+
+desc
+@Ship class for representing a battleship
+@
+
+
+1.7
+log
+@Comments.
+@
+text
+@/**
+ * The Ship class represents a ship object for a battleship game. 
+ * 
+ * @@author Andy Nguyen
+ */
+
+
+public class Ship {
+    /**
+     * String to display on the board to represent the ship
+     */
+    private String marker = "";
+    /**
+     * Amount of hits the ship has taken
+     */
+    private int damage = 0;
+    /**
+     * Number of hits the ship can take before sinking (# cells it occupies)
+     */
+    private int hitpoints = 0;
+    /**
+     * Indicates if the ship is sunk or not
+     */
+    private boolean sunk = false;
+
+    /**
+     * A constructor for a Ship object.
+     * 
+     * @@param      m       string to display on the board to represent the ship      
+     * @@param      hp      number of hits the ship can take (hitpoints)
+     */
+    public Ship( String m, int hp ) {
+        marker = m;
+        hitpoints = hp;
+    }
+
+    /**
+     * @@return the ship marker string used to indentify the ship
+     */
+    public String getMarker() {
+        return marker;
+    }
+    
+
+    /**
+     * @@return number of times the ship has been hit
+     */
+    public int getDamage() {
+        return damage;
+    }
+
+    /**
+     * @@return number of hits the ship can take
+     */
+    public int getHP() {
+        return hitpoints;
+    }
+
+
+    /**
+     * @@return boolean value indicating is ship is sunk
+     */
+    public boolean isSunk() {
+        return sunk;
+    }
+
+
+    /**
+     * Add damage to the ship.
+     */
+    public void hit() {
+        if( damage < hitpoints ) {
+            ++damage;
+        }
+
+        if( damage >= hitpoints ) {
+            sunk = true;
+        }
+    }
+
+    /**
+     * @@return string representing the ship
+     */
+    public String toString() {
+        return marker + " " + damage + "/" + hitpoints + " " + sunk; 
+    }
+
+}
+
+/*
+ * Ship.java
+ * 
+ * Version: 
+ *     $Id: Ship.java,v 1.6 2013/09/21 22:45:12 agn3691 Exp agn3691 $
+ * 
+ * Revisions: 
+ *     $Log: Ship.java,v $
+ *     Revision 1.6  2013/09/21 22:45:12  agn3691
+ *     More comments.
+ *
+ *     Revision 1.5  2013/09/21 18:40:14  agn3691
+ *     Comments.
+ *
+ *     Revision 1.3  2013/09/21 02:06:47  agn3691
+ *     Changed marker data type and added comments.
+ *
+ *     Revision 1.2  2013/09/19 23:26:51  agn3691
+ *     Changed method implementations.
+ *
+ *     Revision 1.1  2013/09/18 20:36:00  agn3691
+ *     Initial revision
+ *
+ *
+ */
+@
+
+
+1.6
+log
+@More comments.
+@
+text
+@d85 1
+a85 1
+        return marker + " " + hitpoints + " " + damage + " " + sunk; 
+d94 1
+a94 1
+ *     $Id: Ship.java,v 1.5 2013/09/21 18:40:14 agn3691 Exp agn3691 $
+d98 3
+@
+
+
+1.5
+log
+@Comments.
+@
+text
+@a0 20
+/*
+ * Ship.java
+ * 
+ * Version: 
+ *     $Id: Ship.java,v 1.3 2013/09/21 02:06:47 agn3691 Exp agn3691 $
+ * 
+ * Revisions: 
+ *     $Log: Ship.java,v $
+ *     Revision 1.3  2013/09/21 02:06:47  agn3691
+ *     Changed marker data type and added comments.
+ *
+ *     Revision 1.2  2013/09/19 23:26:51  agn3691
+ *     Changed method implementations.
+ *
+ *     Revision 1.1  2013/09/18 20:36:00  agn3691
+ *     Initial revision
+ *
+ *
+ */
+
+d37 3
+a39 1
+
+d44 4
+d52 3
+d59 4
+a66 4
+    public void reset() {
+        damage = 0;
+        sunk = false;
+    }
+d68 3
+d81 3
+d88 24
+a111 1
+}@
+
+
+1.4
+log
+@Fixed bug in hit() method. Wasn't properly setting sunk to true once damage equaled hp.
+@
+text
+@@
+
+
+1.3
+log
+@Changed marker data type and added comments.
+@
+text
+@d5 1
+a5 1
+ *     $Id: Ship.java,v 1.2 2013/09/19 23:26:51 agn3691 Exp agn3691 $
+d9 3
+d79 1
+a79 1
+    public boolean hit() {
+a81 1
+            return sunk = false;
+d84 3
+a86 1
+        return sunk = true;
+@
+
+
+1.2
+log
+@Changed method implementations.
+@
+text
+@d5 1
+a5 1
+ *     $Id: Ship.java,v 1.1 2013/09/18 20:36:00 agn3691 Exp agn3691 $
+d8 6
+a13 3
+ *     $Log: Ship.java,v $
+ *     Revision 1.1  2013/09/18 20:36:00  agn3691
+ *     Initial revision
+d26 16
+a41 5
+
+    private String name = ""; // name of the ship
+    private int damage = 0; // amount of hits the ship has taken
+    private int hitpoints = 0; // number of hits the ship can take before sinking
+    private boolean sunk = false; // indicates if the ship is sunk or not
+d46 1
+d49 2
+a50 2
+    public Ship( String shipName, int hp ) {
+        name = shipName;
+d54 3
+a56 2
+    public String getName() {
+        return name;
+d86 1
+a86 1
+        return name + " " + hitpoints + " " + damage + " " + sunk; 
+@
+
+
+1.1
+log
+@Initial revision
+@
+text
+@d5 1
+a5 1
+ *     $Id$
+d8 4
+a11 1
+ *     $Log$
+@

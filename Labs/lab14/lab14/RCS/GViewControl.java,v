@@ -1,0 +1,290 @@
+head	1.3;
+access;
+symbols;
+locks
+	andy:1.3; strict;
+comment	@# @;
+
+
+1.3
+date	2013.12.05.20.50.55;	author andy;	state Exp;
+branches;
+next	1.2;
+
+1.2
+date	2013.12.05.17.19.59;	author andy;	state Exp;
+branches;
+next	1.1;
+
+1.1
+date	2013.12.05.16.42.29;	author andy;	state Exp;
+branches;
+next	;
+
+
+desc
+@lab14 GViewController
+@
+
+
+1.3
+log
+@Attached actionlisteners to buttons
+@
+text
+@/**
+ *  Class definition for the graphical view and controller. 
+ *
+ * @@author Andy Nguyen
+ */
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.*;
+import java.util.*;
+
+
+public class  GViewControl extends JFrame implements Observer {
+    private ConcentrationModel model;
+    private ArrayList<CardButton> buttonList ;
+    private JLabel statusLabel;
+    private Color colors[] = { Color.RED, Color.BLUE, Color.GREEN, Color.ORANGE,
+                                                Color.CYAN, Color.GRAY, Color.MAGENTA, Color.PINK };
+
+    /**
+     * Constructs a GViewControl objects
+     *
+     * @@param model      The model for the view and controller
+     */
+    public GViewControl( ConcentrationModel model ) {
+        model.addObserver( this );
+        this.model = model;
+        buttonList = new ArrayList<CardButton>();
+
+        // set frame properties
+        this.setTitle( "Concentration Game" );
+        this.setVisible( true );
+        this.setSize( model.BOARD_SIZE * 100 , model.BOARD_SIZE * 100 + 50 );
+        this.setDefaultCloseOperation( JFrame.EXIT_ON_CLOSE );        
+
+        // create and populate content container
+        Container container = getContentPane();
+        container.setLayout( new BorderLayout() );
+
+        statusLabel = new JLabel( "Moves: 0 Select first card." );
+        JPanel statusPanel = new JPanel();
+        statusPanel.add( statusLabel );
+
+
+
+        container.add( statusPanel, BorderLayout.NORTH );
+        container.add( createButtonPanel(), BorderLayout.SOUTH );
+        container.add( createCardPanel(), BorderLayout.CENTER );
+    }
+
+    /**
+     * Update the window when the model indicates an update is required. 
+     * Update changes the color and string content of a CardButton based 
+     * on the CardFaces in the model, and it changes the text in the label based
+     * on the model state. 
+     *
+     * @@param t      An Observable - not used
+     * @@param o      An Object - not used
+     */
+    public void update( Observable t, Object o ) {
+        ArrayList<CardFace> cards = model.getCards();
+
+        int moveCount = model.getMoveCount();
+        if(model.howManyCardsUp() == 1) {
+            statusLabel.setText("Moves: "+ moveCount +" Select second card.");
+        } else {
+            statusLabel.setText("Moves: "+ moveCount +" Select first card.");
+        }                 
+                
+
+        CardFace card = null;
+        CardButton cardButton = null;
+        for ( int i = 0, len = cards.size(); i < len; ++i ) {
+            card = cards.get( i );
+            cardButton = buttonList.get( i );
+          
+            if( card.isFaceUp() ) {
+                cardButton.setBackground( colors[ card.getNumber() ] );
+                cardButton.setText( card.getNumber() + "" );
+            } else {
+                cardButton.setBackground( Color.WHITE );
+                cardButton.setText( "" );
+            }
+        }
+
+
+    }
+
+    private JPanel createButtonPanel() {
+        JPanel buttonPanel = new JPanel();
+
+        JButton resetButton = new JButton( "Reset" );
+        resetButton.addActionListener( new ActionListener() {
+            public void actionPerformed( ActionEvent ae ) {
+                   model.reset();
+            }                
+        }); 
+
+
+        JButton undoButton = new JButton( "Undo" );
+        undoButton.addActionListener( new ActionListener() {
+            public void actionPerformed( ActionEvent ae ) {
+                model.undo();
+            }
+        });
+
+        JButton cheatButton = new JButton( "Cheat" );
+        cheatButton.addActionListener( new ActionListener() {
+            public void actionPerformed( ActionEvent ae ) {
+                CheatFrame cheatFrame = new CheatFrame( buttonList, model.BOARD_SIZE );
+            }
+        });
+
+        // add buttons to panel
+        buttonPanel.add( resetButton );
+        buttonPanel.add( undoButton );
+        buttonPanel.add( cheatButton );
+
+        return buttonPanel;
+    }
+
+    private JPanel createCardPanel() {
+        JPanel cardPanel = new JPanel( new GridLayout( model.BOARD_SIZE, 
+                                                                                            model.BOARD_SIZE) );
+
+        CardButton cardButton = null;
+        CardFace card = null;
+        ArrayList<CardFace> cards = model.getCards();
+
+        for( int i = 0; i < cards.size(); ++i  ) {
+            card = cards.get( i );
+            cardButton = new CardButton( i );
+            cardButton.setBackground( Color.WHITE );
+
+            cardButton.addActionListener( new ActionListener() {
+                
+                public void actionPerformed( ActionEvent ae )
+                {
+                    //Execute when button is pressed
+                    model.selectCard( ( (CardButton) ae.getSource() ).getPos() );
+                }
+             });     
+
+            if( card.isFaceUp() ) {
+                cardButton.setText( card.getNumber() + "" );
+            } else {
+                cardButton.setText( "" );
+            }
+
+            cardPanel.add( cardButton ); 
+            buttonList.add( cardButton );
+        }
+
+        return cardPanel;
+    }
+
+    /**
+     * The main method used to play a game.
+     */
+    public static void main ( String[] args ) {
+        GViewControl gui = new GViewControl( new ConcentrationModel());
+
+    }
+}
+
+
+/*
+ * GViewControl.java
+ * 
+ * Version: 
+ *     $Id: GViewControl.java,v 1.2 2013/12/05 17:19:59 andy Exp andy $
+ * 
+ * Revisions: 
+ *     $Log: GViewControl.java,v $
+ *     Revision 1.2  2013/12/05 17:19:59  andy
+ *     Implemented gui methods.
+ *
+ *     Revision 1.1  2013/12/05 16:42:29  andy
+ *     Initial revision
+ *
+ *
+ */@
+
+
+1.2
+log
+@Implemented gui methods.
+@
+text
+@d9 1
+d12 1
+d14 5
+a18 1
+    ConcentrationModel model;
+d26 1
+d28 1
+d40 7
+a46 1
+        container.add( createStatusPanel(), BorderLayout.NORTH );
+d61 1
+d63 7
+a69 1
+    }
+d71 14
+a84 2
+    private JPanel createStatusPanel() {
+        JPanel statusPanel = new JPanel();
+a85 1
+        statusPanel.add( new JLabel( "Test" ) );
+a86 1
+        return statusPanel;
+d92 26
+a117 3
+        buttonPanel.add( new JButton( "Reset" ) );
+        buttonPanel.add( new JButton( "Cheat" ) );
+        buttonPanel.add( new JButton( "Undo" ) );
+d128 1
+a128 1
+        ArrayList<CardFace>  cards = model.getCards();
+d133 10
+d146 2
+a147 3
+            }
+            else {
+                cardButton.setText( i + "" );
+d151 1
+d171 1
+a171 1
+ *     $Id: GViewControl.java,v 1.1 2013/12/05 16:42:29 andy Exp andy $
+d175 3
+@
+
+
+1.1
+log
+@Initial revision
+@
+text
+@d7 4
+d12 1
+d20 1
+d22 13
+d46 1
+a46 1
+    private void update( Observerable t, Object o ) {
+d50 42
+d97 1
+a97 1
+
+d107 1
+a107 1
+ *     $Id$
+d110 4
+a113 1
+ *     $Log$
+@

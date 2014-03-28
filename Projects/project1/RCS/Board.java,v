@@ -1,0 +1,1182 @@
+head	1.12;
+access;
+symbols;
+locks
+	agn3691:1.12; strict;
+comment	@# @;
+
+
+1.12
+date	2013.09.22.00.23.21;	author agn3691;	state Exp;
+branches;
+next	1.11;
+
+1.11
+date	2013.09.21.22.44.16;	author agn3691;	state Exp;
+branches;
+next	1.10;
+
+1.10
+date	2013.09.21.21.38.02;	author agn3691;	state Exp;
+branches;
+next	1.9;
+
+1.9
+date	2013.09.21.18.43.33;	author agn3691;	state Exp;
+branches;
+next	1.8;
+
+1.8
+date	2013.09.21.07.11.44;	author agn3691;	state Exp;
+branches;
+next	1.7;
+
+1.7
+date	2013.09.21.03.58.28;	author agn3691;	state Exp;
+branches;
+next	1.6;
+
+1.6
+date	2013.09.21.02.10.13;	author agn3691;	state Exp;
+branches;
+next	1.5;
+
+1.5
+date	2013.09.19.23.25.31;	author agn3691;	state Exp;
+branches;
+next	1.4;
+
+1.4
+date	2013.09.18.20.36.53;	author agn3691;	state Exp;
+branches
+	1.4.1.1;
+next	1.3;
+
+1.3
+date	2013.09.18.19.23.20;	author agn3691;	state Exp;
+branches
+	1.3.1.1;
+next	1.2;
+
+1.2
+date	2013.09.17.16.30.12;	author agn3691;	state Exp;
+branches;
+next	1.1;
+
+1.1
+date	2013.09.15.20.45.09;	author agn3691;	state Exp;
+branches;
+next	;
+
+1.3.1.1
+date	2013.09.21.02.08.06;	author agn3691;	state Exp;
+branches;
+next	1.3.1.2;
+
+1.3.1.2
+date	2013.09.21.02.08.37;	author agn3691;	state Exp;
+branches;
+next	;
+
+1.4.1.1
+date	2013.09.21.01.33.52;	author agn3691;	state Exp;
+branches;
+next	;
+
+
+desc
+@Board class represents a Battleship game board
+@
+
+
+1.12
+log
+@Exception comments
+@
+text
+@/**
+ * The Board class represents the board for a battleship game.
+ * 
+ * @@author Andy Nguyen
+ */
+
+import java.io.*;
+import java.util.*;
+
+public class Board {
+   /**
+     * Illegal coodinates status code.
+     */
+    public static final int ILLEGAL = -1;
+
+    /**
+     * Alphabet used to translate letter to number using String indexOf.
+     */
+    private final String ALPHABET = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+
+    /**
+     * Size of the board.
+     */
+    private int size = 0;
+
+    /**
+     * Cells on the board.
+     */
+    private Cell[][] cells = null;
+
+    /**
+     * Initial number of ships on the board.
+     */
+    private int shipCount = 0;
+
+
+    /**
+     * Number of ships sunk.
+     */
+    private int shipsSunk = 0;
+
+    /**
+     * Ship placement of the board (the board initial display).
+     */
+    private String shipPlacement = "";
+
+    /**
+     * The minimum and maximum size of the board.
+     */
+    public static final int MINSIZE = 5;
+    public static final int MAXSIZE = 26;
+
+
+    /**
+     * A constructor for a Board object.
+     * 
+     * @@param      mySize      number of rows/columns on the board
+     */
+    public Board( int mySize ) {
+
+        size = mySize;
+        cells = new Cell[size][size];        // instantiate cells array 
+
+        fillBoard();
+    }
+
+    /**
+     * Fill the board with WaterCell objects.
+     */
+    private void fillBoard() {
+        for( int i = 0; i < size; ++i ) {
+            for( int j = 0; j < size; ++j ) {
+                cells[i][j] = new WaterCell();
+            }
+        }
+    }
+
+    /**
+     * Get the ship count (number of ships on the board)
+     */
+    public int getShipCount() {
+        return shipCount;
+    }
+
+    /**
+     * Get the number of ships sunk.
+     */
+    public int getShipsSunk(){
+        return shipsSunk;
+    }
+
+    /**
+     * Get the ship placement.
+     * 
+     * @@return      string containing the board with ship placements
+     */
+    public String getShipPlacement() {
+        return shipPlacement;
+    }
+
+
+    /**
+     * Convert letter coordinate to a number.
+     * 
+     * @@return      coordinate as an int
+     */
+    public int convertLetter( String c ) {
+        return ALPHABET.indexOf( c );
+    }
+
+    /**
+     * Add a cell to the board.
+     */
+    public void addCell( String y, String x, Cell c ) {
+        cells[convertLetter(y)][convertLetter(x)] = c;
+    }
+
+    /**
+     * Fire at the given coordinates. An int is returned to indicate the result.
+     * -1 -- illegal coordinates
+     * 0 -- missed
+     * 1 -- hit
+     * 2 -- ship was sunk
+     * 3 -- cell was previously fired upon
+     * 
+     * @@param      row      row coordinate
+     * @@param      col      column coordinate
+     *
+     * @@return      int representing result of the fire command
+     */
+    public int fireAtCell( String row, String col ) {
+        int y = convertLetter( row.toUpperCase() ),
+            x = convertLetter( col.toUpperCase() );
+        // make sure coordinates are in bounds
+        if( y > -1 && y < size && x > -1 && x < size ) {
+            int result = cells[y][x].hit();
+
+            if( result == Cell.SUNK ){
+                --shipCount;
+                ++shipsSunk;
+            }
+
+            return result;
+        }
+        else {
+            return ILLEGAL;
+        }
+    }
+
+    /**
+     * Initialize the board by reading a file containing ship coordinates and 
+     * adding the ships to the board. 
+     * 
+     * @@param      fileName      name of the file to read to get ship coordinates
+     *
+     * @@exception IOException thrown if file could not be opened.
+     */
+    public void initialize( String fileName ) throws IOException, 
+        NumberFormatException{
+
+        String[] coordinates = null;
+        String line = "";
+        char letter = 'A'; // letter of the ship being added
+        int shipsInFile = 0;
+        BufferedReader br = null;
+
+        try {
+            // open the file to read
+            br =  new BufferedReader ( new FileReader( fileName ) ) ;
+            shipsInFile = Integer.parseInt(br.readLine());
+            //System.out.println(shipCount);
+            // read each character in the file
+            while ( (line = br.readLine()) != null ) {
+                line = line.trim().replaceAll("\\s{2,}", " ");
+                //System.out.println( line );
+                coordinates = line.split(" ");
+                if( coordinates.length == 4 ) {
+                    addShip( coordinates, letter++ );
+                    ++shipCount;
+                }
+                else{
+                    System.err.println("Line: " + line + " has an invalid " +
+                        "number of coordinates. Line skipped.\n");
+                }
+            }
+
+            if( shipCount != shipsInFile ) {
+                System.err.println("WARNING: The number of ships added to the" +
+                    " board does not equal the number of ships specified in" + 
+                    " the file.\n");
+            }
+
+            ShipCell.setHidden( false );     // unhide ship cells
+            shipPlacement = this.toString(); // store initial display state
+            ShipCell.setHidden( true );      // hide ship cells
+        } 
+        catch ( IOException e ) {
+            System.err.println( "Cannot open file " + fileName + "." );
+        }
+        catch ( NumberFormatException e ) {
+            System.err.println( "Could not read ship count. The first line of" +
+                " the file must be a single integer.");
+            System.exit(1);
+        }
+        catch( ArrayIndexOutOfBoundsException e ) { 
+            System.err.println( "Overlapping or out-of-bounds ships in file " +
+                fileName + "." );
+            System.exit(1);
+        }
+
+        finally {
+            if ( br != null ) {
+                br.close(); // close the file
+            }
+        }
+    }
+
+    /**
+     * Add a ship to the board given a String array of coordinates. The String
+     * array must contain 4 coordinates; [yStart] [xStart] [yEnd] [xEnd]
+     * 
+     * @@param      coordinates      String array containing coordinates
+     * @@param      letter           letter to mark the ship
+     *
+     * @@exception ArrayIndexOutOfBoundsException thrown if invalid coordinates
+     */
+    private void addShip( String[] coordinates, char letter ) throws 
+        ArrayIndexOutOfBoundsException {  
+
+        try {
+            // convert coordinates to numbers
+            int yStart = convertLetter(coordinates[0].toUpperCase()), 
+                xStart = convertLetter(coordinates[1].toUpperCase()), 
+                yEnd = convertLetter(coordinates[2].toUpperCase()),
+                xEnd = convertLetter(coordinates[3].toUpperCase());            
+
+            // make sure xStart <= xEnd and yStart <= yEnd so size calculation  
+            // and while loop works 
+            if( xStart > xEnd ) {
+                int temp = xStart;
+                xStart = xEnd;
+                xEnd = temp;
+            }
+
+            if( yStart > yEnd ) {
+                int temp = yStart;
+                yStart = yEnd;
+                yEnd = temp;
+            }
+
+            // Calculate number of cells the ship will occupy (its hp).
+            // Since a ship can only be vertical or horizontal, either x 
+            // diff or y diff will be zero, thus adding them together
+            // will account for both vertical or horizontal orientations.
+            int shipSize = 1 + ( xEnd - xStart ) + ( yEnd - yStart );
+
+            Ship ship = new Ship( Character.toString(letter), shipSize );
+
+            while( yStart < yEnd || xStart < xEnd ) {
+
+                cells[yStart][xStart] = new ShipCell( ship );
+
+                if( yStart < yEnd ) {
+                    ++yStart;
+                }
+
+                if( xStart < xEnd ) {
+                    ++xStart;
+                }
+            } // end while
+            if( cells[yEnd][xEnd] instanceof ShipCell ) {
+                throw new ArrayIndexOutOfBoundsException();
+            }
+            else {
+                cells[yEnd][xEnd] = new ShipCell( ship );
+            }
+        } 
+
+        catch( ArrayIndexOutOfBoundsException e ) { 
+            throw e; // throw the exception to the method caller
+        }
+    }
+
+
+    /**
+     * @@return      string representing the board
+     */
+    public String toString() {
+        String display = "  ";
+        char colLetter = 'A', rowLetter = 'A';
+
+        // add column titles
+        for ( int i = 0; i < size; ++i ) {
+            display += colLetter++ + " ";
+        }
+
+        for( int i = 0; i < size; ++i ) {
+            display += "\n";
+            display += rowLetter++; // add row title
+            // add cells
+            for( int j = 0; j < size; ++j) {
+                display += " " + cells[i][j];
+            }
+
+        }
+        return display;
+    }
+}
+
+/*
+ * Board.java
+ * 
+ * Version: 
+ *     $Id: Board.java,v 1.11 2013/09/21 22:44:16 agn3691 Exp agn3691 $
+ * 
+ * Revisions: 
+ *     $Log: Board.java,v $
+ *     Revision 1.11  2013/09/21 22:44:16  agn3691
+ *     More comments.
+ *
+ *     Revision 1.10  2013/09/21 21:38:02  agn3691
+ *     Added comments for all the methods.
+ *     Changed FireAtCell method to return an int instead of a String to represent the result for the fire command.
+ *
+ *     Revision 1.9  2013/09/21 18:43:33  agn3691
+ *     Added variable to track ships sunk.
+ *     Modified fireAtCell method to return ship sunk message when necessary.
+ * 
+ *     Revision 1.8  2013/09/21 07:11:44  agn3691
+ *     Added fireAtCell method and a new class variable, shipPlacement.
+ *
+ *     Revision 1.7  2013/09/21 03:58:28  agn3691
+ *     Added error checking
+ *
+ *     Revision 1.6  2013/09/21 02:10:13  agn3691
+ *     Fixed initialize method to properly add ship cells.
+ *
+ *     Revision 1.5  2013/09/19 23:25:31  agn3691
+ *     Added initialize method for reading file and adding ships.
+ *
+ *     Revision 1.4  2013/09/18 20:36:53  agn3691
+ *     Added method to fill board with water cells
+ *     Added toString to print board
+ *
+ *     Revision 1.3  2013/09/18 19:23:20  agn3691
+ *     Added createHashMap and convertChar method for converting chars to valid int coordinates.
+ *
+ *     Revision 1.2  2013/09/17 16:30:12  agn3691
+ *     Modified constructor to take a Outstream object. PrintWriter writes to the passed OutStream object.
+ *
+ *     Revision 1.1  2013/09/15 20:45:09  agn3691
+ *     Initial revision
+ *
+ */@
+
+
+1.11
+log
+@More comments.
+@
+text
+@d314 1
+a314 1
+ *     $Id: Board.java,v 1.10 2013/09/21 21:38:02 agn3691 Exp agn3691 $
+d317 4
+a320 1
+ *     $Log: Board.java,v $
+@
+
+
+1.10
+log
+@Added comments for all the methods.
+Changed FireAtCell method to return an int instead of a String to represent the result for the fire command.
+@
+text
+@d155 2
+d224 2
+a285 2
+     * Return string representation of the board
+     * 
+d314 1
+a314 1
+ *     $Id: Board.java,v 1.9 2013/09/21 18:43:33 agn3691 Exp agn3691 $
+d318 4
+d325 1
+a325 1
+ *
+@
+
+
+1.9
+log
+@Added variable to track ships sunk.
+Modified fireAtCell method to return ship sunk message when necessary.
+@
+text
+@d11 5
+d67 3
+a69 1
+
+d78 3
+d85 3
+d91 6
+d101 6
+d111 3
+d118 14
+a131 1
+    public String fireAtCell( String row, String col ) {
+d135 2
+a136 2
+        if( y > -1 && y < size-1 && x > -1 && x < size-1 ) {
+            String msg = cells[y][x].hit();
+d138 1
+a138 1
+            if( msg.equals( ShipCell.SUNKMSG ) ){
+d143 1
+a143 1
+            return msg;
+d146 1
+a146 1
+            return "Illegal coordinates.";
+d150 6
+d200 1
+a200 2
+                " the file must be a single integer.\n\n" +
+                "- PROGRAM TERMINATED -" );
+d216 7
+d281 5
+d312 1
+a312 1
+ *     $Id: Board.java,v 1.8 2013/09/21 07:11:44 agn3691 Exp agn3691 $
+d316 4
+@
+
+
+1.8
+log
+@Added fireAtCell method and a new class variable, shipPlacement.
+@
+text
+@d27 1
+a27 1
+     * Number of ships on the board.
+d31 6
+d48 1
+d75 3
+d95 8
+a102 1
+            return cells[y][x].hit();
+d254 1
+a254 1
+ *     $Id: Board.java,v 1.7 2013/09/21 03:58:28 agn3691 Exp agn3691 $
+d258 3
+@
+
+
+1.7
+log
+@Added error checking
+@
+text
+@d11 4
+d27 1
+a27 1
+     * number of ships on the board.
+d32 1
+a32 1
+     * Alphabet used to translate letter to number using String indexOf.
+d34 1
+a34 1
+    private final String ALPHABET = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+d68 4
+d80 11
+d93 1
+a93 1
+    NumberFormatException{
+d126 4
+d140 5
+d154 1
+a154 1
+    ArrayIndexOutOfBoundsException {  
+a161 1
+            //System.out.println(yStart + " " + xStart + " " + yEnd + " " +xEnd+"\n");
+d163 2
+a164 2
+            // make sure xStart <= xEnd and yStart <= yEnd so size calculation and 
+            // while loop works 
+d177 3
+a179 3
+            // Calculate number of cells the ship will occupy which will be its hp.
+            // Since the ship can only be vertical or horizontal, either x 
+            // difference or y difference will be zero, thus adding them together
+a182 3
+            //System.out.println("Ship size= " + shipSize);
+           // System.out.println("Letter="+letter+"\n");
+
+d206 1
+a206 2
+            System.err.println( "Overlapping or out-of-bounds ships in file filename." );
+            System.exit(1);
+a218 1
+        display += "\n";
+d221 2
+a222 2
+            // add row title
+            display += rowLetter++;
+d227 1
+a227 1
+            display += "\n";
+d237 1
+a237 1
+ *     $Id: Board.java,v 1.6 2013/09/21 02:10:13 agn3691 Exp agn3691 $
+d241 3
+@
+
+
+1.6
+log
+@Fixed initialize method to properly add ship cells.
+@
+text
+@d9 1
+d35 2
+a36 2
+    private final int MINSIZE = 5;
+    private final int MAXSIZE = 26;
+d60 3
+d73 3
+a75 1
+    public void initialize( String fileName ) throws IOException {
+d79 1
+d85 2
+a86 2
+            shipCount = Integer.parseInt(br.readLine());
+            System.out.println(shipCount);
+d90 1
+a90 1
+                System.out.println( line );
+d93 6
+a98 2
+                    addShip( coordinates, letter );
+                    ++letter;
+d100 1
+d102 4
+a105 5
+                // for( String s : coordinates ) {
+                //   System.out.print( s + " ");
+                // }
+                //System.out.println();
+                //System.out.println( line );
+d111 7
+d125 2
+a126 5
+    private void addShip( String[] coordinates, char letter ) {  
+        int yStart = convertLetter(coordinates[0].toUpperCase()), 
+            xStart = convertLetter(coordinates[1].toUpperCase()), 
+            yEnd = convertLetter(coordinates[2].toUpperCase()),
+            xEnd = convertLetter(coordinates[3].toUpperCase());
+d128 7
+a134 8
+        System.out.println(yStart + " " + xStart + " " + yEnd + " " +xEnd+"\n");
+        // make sure xStart <= xEnd and yStart <= yEnd so size calculation and 
+        // for loop works 
+        if( xStart > xEnd ) {
+            int temp = xStart;
+            xStart = xEnd;
+            xEnd = temp;
+        }
+d136 7
+a142 5
+        if( yStart > yEnd ) {
+            int temp = yStart;
+            yStart = yEnd;
+            yEnd = temp;
+        }
+d144 5
+d150 5
+a154 5
+        // Calculate number of cells the ship will occupy which will be its hp.
+        // Since the ship can only be vertical or horizontal, either x 
+        // difference or y difference will be zero, thus adding them together
+        // will account for both vertical or horizontal orientations.
+        int shipSize = ( xEnd - xStart ) + ( yEnd - yStart );
+d156 2
+a157 2
+        System.out.println("Ship size= " + shipSize);
+        System.out.println("Letter="+letter+"\n");
+d159 1
+a159 1
+        Ship ship = new Ship( Character.toString(letter), shipSize );
+d161 1
+a161 1
+        while( (yStart < yEnd) || (xStart < xEnd) ) {
+d163 1
+a163 1
+            cells[yStart][xStart] = new ShipCell( ship );
+d165 10
+a174 2
+            if( yStart < yEnd ) {
+                ++yStart;
+d176 2
+a177 3
+
+            if( xStart < xEnd ) {
+                ++xStart;
+a179 1
+         cells[yEnd][xEnd] = new ShipCell( ship );
+d181 4
+d215 1
+a215 1
+ *     $Id: Board.java,v 1.5 2013/09/19 23:25:31 agn3691 Exp agn3691 $
+d219 3
+@
+
+
+1.5
+log
+@Added initialize method for reading file and adding ships.
+@
+text
+@a0 23
+/*
+ * Board.java
+ * 
+ * Version: 
+ *     $Id: Board.java,v 1.4 2013/09/18 20:36:53 agn3691 Exp agn3691 $
+ * 
+ * Revisions: 
+ *     $Log: Board.java,v $
+ *     Revision 1.4  2013/09/18 20:36:53  agn3691
+ *     Added method to fill board with water cells
+ *     Added toString to print board
+ *
+ *     Revision 1.3  2013/09/18 19:23:20  agn3691
+ *     Added createHashMap and convertChar method for converting chars to valid int coordinates.
+ *
+ *     Revision 1.2  2013/09/17 16:30:12  agn3691
+ *     Modified constructor to take a Outstream object. PrintWriter writes to the passed OutStream object.
+ *
+ *     Revision 1.1  2013/09/15 20:45:09  agn3691
+ *     Initial revision
+ *
+ */
+
+d11 36
+a46 17
+    private int height = 0, width = 0;  // height and width of the board
+    private Cell[][] cells = null;      // cells on the board
+    private int shipCount = 0;          // number of ships on the board
+    private HashMap<Character, Integer> hMap;
+
+    /**
+     * A constructor for a Board object. It accepts the height and width in cells for the board.
+     * h
+     * @@param      height      height of the board in cells
+     * @@param      width      width of the board in cells 
+     */
+    public Board( int height, int width) {
+
+        cells = new Cell[width][height];        // instantiate cells array 
+        this.height = height; 
+        this.width = width;
+        hMap = createHashMap();
+d51 6
+a56 2
+    public int getHeight() {
+        return height;
+d59 3
+a61 2
+    public int getWidth() {
+        return width;
+d64 2
+a65 2
+    public void addCell( int x, int y, Cell cell ) {
+        cells[x][y] = cell;
+d68 35
+a102 4
+    private void fillBoard() {
+        for( int i = 0; i < width; ++i ) {
+            for( int j = 0; j < height; ++j ) {
+                cells[i][j] = new WaterCell( i, j );
+d107 5
+a111 2
+    private HashMap<Character, Integer> createHashMap() {
+        HashMap<Character, Integer> hash = new HashMap<Character, Integer>();
+d113 7
+a119 4
+        char l = 'A';
+        for( int i = 0; i < 26; ++i ){
+            hash.put( l, i );
+            ++l;
+a120 2
+        return hash;
+    }
+d122 4
+a125 8
+    public int convertChar(char c) throws NullPointerException {
+        try {
+            // convert char to uppercase and get the value it corresponds to
+            return hMap.get( Character.toUpperCase(c) );
+        }
+        catch( NullPointerException e ) {
+            System.err.println("Character " + c + " does not exist in the hashmap keys.");
+            return -1;
+d127 27
+d156 1
+d162 1
+a162 1
+        for ( int i = 0; i < width; ++i ) {
+d167 1
+a167 1
+        for( int i = 0; i < width; ++i ) {
+d171 1
+a171 1
+            for( int j = 0; j < height; ++j) {
+d180 25
+@
+
+
+1.4
+log
+@Added method to fill board with water cells
+Added toString to print board
+@
+text
+@d5 1
+a5 1
+ *     $Id: Board.java,v 1.3 2013/09/18 19:23:20 agn3691 Exp agn3691 $
+d8 5
+a12 1
+ *     $Log: Board.java,v $
+@
+
+
+1.4.1.1
+log
+@co -l1.3 Board.java
+Accidentaly checkin; ignore
+@
+text
+@d5 1
+a5 1
+ *     $Id: Board.java,v 1.4 2013/09/18 20:36:53 agn3691 Exp agn3691 $
+d8 1
+a8 5
+ *     $Log: Board.java,v $
+ *     Revision 1.4  2013/09/18 20:36:53  agn3691
+ *     Added method to fill board with water cells
+ *     Added toString to print board
+ *
+@
+
+
+1.3
+log
+@Added createHashMap and convertChar method for converting chars to valid int coordinates.
+@
+text
+@d5 1
+a5 1
+ *     $Id: Board.java,v 1.2 2013/09/17 16:30:12 agn3691 Exp agn3691 $
+d9 3
+a32 1
+    private PrintWriter output = null;
+d34 1
+d41 2
+a42 2
+    public Board( int height, int width, OutputStream out) {
+        output = new PrintWriter(out, true);    // set output destination
+d47 1
+d63 1
+a63 10
+    public void display() {
+        char xLetter = 'A', yLetter = 'A';
+        boolean addedLetter = false;
+        output.print("  ");
+
+        // output column titles
+        for ( int i = 0; i < width; ++i ) {
+            output.print(xLetter++ + " ");
+        }
+        output.println();
+d65 2
+a66 5
+            // output row title
+            output.print(yLetter++);
+            // output cells 
+            for( int j = 0; j < height; ++j) {
+                output.print( " " + cells[i][j]);
+a67 1
+            output.println();
+d91 11
+d103 10
+@
+
+
+1.3.1.1
+log
+@*** empty log message ***
+@
+text
+@d1 15
+a15 1
+
+d27 5
+d33 4
+a36 6
+     * Size of the board.
+     */
+    private int size = 0;
+
+    /**
+     * Cells on the board.
+d38 6
+a43 29
+    private Cell[][] cells = null;
+
+    /**
+     * number of ships on the board.
+     */
+    private int shipCount = 0;
+
+    /**
+     * Alphabet used to translate letter to number using String indexOf.
+     */
+    private final String ALPHABET = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+
+    /**
+     * The minimum and maximum size of the board.
+     */
+    private final int MINSIZE = 5;
+    private final int MAXSIZE = 26;
+
+    /**
+     * A constructor for a Board object.
+     * 
+     * @@param      mySize      number of rows/columns on the board
+     */
+    public Board( int mySize ) {
+
+        size = mySize;
+        cells = new Cell[size][size];        // instantiate cells array 
+
+        fillBoard();
+d47 2
+a48 6
+    private void fillBoard() {
+        for( int i = 0; i < size; ++i ) {
+            for( int j = 0; j < size; ++j ) {
+                cells[i][j] = new WaterCell();
+            }
+        }
+d51 2
+a52 3
+
+    public int convertLetter( String c ) {
+        return ALPHABET.indexOf( c );
+d55 2
+a56 2
+    public void addCell( String y, String x, Cell c ) {
+        cells[convertLetter(y)][convertLetter(x)] = c;
+d59 4
+d64 3
+a66 30
+    public void initialize( String fileName ) throws IOException {
+        String[] coordinates = null;
+        String line = "";
+        char letter = 'A'; // letter of the ship being added
+        BufferedReader br = null;
+
+        try {
+            // open the file to read
+            br =  new BufferedReader ( new FileReader( fileName ) ) ;
+            shipCount = Integer.parseInt(br.readLine());
+            System.out.println(shipCount);
+            // read each character in the file
+            while ( (line = br.readLine()) != null ) {
+                line = line.trim().replaceAll("\\s{2,}", " ");
+                System.out.println( line );
+                coordinates = line.split(" ");
+                if( coordinates.length == 4 ) {
+                    addShip( coordinates, letter );
+                    ++letter;
+                }
+
+                // for( String s : coordinates ) {
+                //   System.out.print( s + " ");
+                // }
+                //System.out.println();
+                //System.out.println( line );
+            }
+        } 
+        catch ( IOException e ) {
+            System.err.println( "Cannot open file " + fileName + "." );
+d68 7
+a74 3
+        finally {
+            if ( br != null ) {
+                br.close(); // close the file
+d76 1
+d80 2
+a81 14
+    private void addShip( String[] coordinates, char letter ) {  
+        int yStart = convertLetter(coordinates[0].toUpperCase()), 
+            xStart = convertLetter(coordinates[1].toUpperCase()), 
+            yEnd = convertLetter(coordinates[2].toUpperCase()),
+            xEnd = convertLetter(coordinates[3].toUpperCase());
+
+        System.out.println(yStart + " " + xStart + " " + yEnd + " " +xEnd+"\n");
+        // make sure xStart <= xEnd and yStart <= yEnd so size calculation and 
+        // for loop works 
+        if( xStart > xEnd ) {
+            int temp = xStart;
+            xStart = xEnd;
+            xEnd = temp;
+        }
+d83 4
+a86 4
+        if( yStart > yEnd ) {
+            int temp = yStart;
+            yStart = yEnd;
+            yEnd = temp;
+d88 1
+a88 25
+
+
+        // Calculate number of cells the ship will occupy which will be its hp.
+        // Since the ship can only be vertical or horizontal, either x 
+        // difference or y difference will be zero, thus adding them together
+        // will account for both vertical or horizontal orientations.
+        int shipSize = ( xEnd - xStart ) + ( yEnd - yStart );
+        System.out.println("Ship size= " + shipSize);
+        System.out.println("Letter="+letter+"\n");
+        Ship ship = new Ship( Character.toString(letter), shipSize );
+
+        while( (yStart < yEnd) || (xStart < xEnd) ) {
+
+            cells[yStart][xStart] = new ShipCell( ship );
+
+            if( yStart < yEnd ) {
+                ++yStart;
+            }
+
+            if( xStart < xEnd ) {
+                ++xStart;
+            }
+        } 
+         cells[yEnd][xEnd] = new ShipCell( ship );
+
+d91 8
+a98 8
+
+    public String toString() {
+        String display = "  ";
+        char colLetter = 'A', rowLetter = 'A';
+
+        // add column titles
+        for ( int i = 0; i < size; ++i ) {
+            display += colLetter++ + " ";
+a99 1
+        display += "\n";
+a100 10
+        for( int i = 0; i < size; ++i ) {
+            // add row title
+            display += rowLetter++;
+            // add cells
+            for( int j = 0; j < size; ++j) {
+                display += " " + cells[i][j];
+            }
+            display += "\n";
+        }
+        return display;
+a103 25
+/*
+ * Board.java
+ * 
+ * Version: 
+ *     $Id: Board.java,v 1.5 2013/09/19 23:25:31 agn3691 Exp agn3691 $
+ * 
+ * Revisions: 
+ *     $Log: Board.java,v $
+ *     Revision 1.5  2013/09/19 23:25:31  agn3691
+ *     Added initialize method for reading file and adding ships.
+ *
+ *     Revision 1.4  2013/09/18 20:36:53  agn3691
+ *     Added method to fill board with water cells
+ *     Added toString to print board
+ *
+ *     Revision 1.3  2013/09/18 19:23:20  agn3691
+ *     Added createHashMap and convertChar method for converting chars to valid int coordinates.
+ *
+ *     Revision 1.2  2013/09/17 16:30:12  agn3691
+ *     Modified constructor to take a Outstream object. PrintWriter writes to the passed OutStream object.
+ *
+ *     Revision 1.1  2013/09/15 20:45:09  agn3691
+ *     Initial revision
+ *
+ */@
+
+
+1.3.1.2
+log
+@*** empty log message ***
+@
+text
+@d184 1
+a184 1
+ *     $Id: Board.java,v 1.3.1.1 2013/09/21 02:08:06 agn3691 Exp agn3691 $
+d187 1
+a187 4
+ *     $Log: Board.java,v $
+ *     Revision 1.3.1.1  2013/09/21 02:08:06  agn3691
+ *     *** empty log message ***
+ *
+@
+
+
+1.2
+log
+@Modified constructor to take a Outstream object. PrintWriter writes to the passed OutStream object.
+@
+text
+@d5 1
+a5 1
+ *     $Id: Board.java,v 1.1 2013/09/15 20:45:09 agn3691 Exp agn3691 $
+d9 3
+d24 1
+a24 1
+
+d27 5
+a31 7
+    // height and width of the board
+    private int height = 0, width = 0;
+
+    // cells on the board
+    private Cell[][] cells;
+
+    private PrintWriter output;
+d34 1
+a34 1
+     * 
+d39 2
+a40 2
+        output = new PrintWriter(out, true); // set output destination
+        cells = new Cell[width][height]; // instantiate cells array 
+d43 1
+d80 10
+d91 9
+d101 1
+@
+
+
+1.1
+log
+@Initial revision
+@
+text
+@d5 1
+a5 1
+ *     $Id$
+d8 4
+a11 1
+ *     $Log$
+d15 1
+a15 1
+ * 
+d20 2
+d30 1
+d37 4
+a40 3
+    public Board( int height, int width) {
+        cells = new Cell[height*width][height*width];
+        this.height = height;
+d58 15
+a72 4
+    
+        for( int x = 0; x < width; ++x ) {
+            for( int y = 0; y < height; ++y) {
+                 System.out.print( cells[x][y] + " " );
+d74 1
+a74 1
+            System.out.println();
+a75 1
+        
+@

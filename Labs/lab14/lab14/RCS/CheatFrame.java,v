@@ -1,0 +1,96 @@
+head	1.2;
+access;
+symbols;
+locks
+	andy:1.2; strict;
+comment	@# @;
+
+
+1.2
+date	2013.12.05.21.29.55;	author andy;	state Exp;
+branches;
+next	1.1;
+
+1.1
+date	2013.12.05.16.38.20;	author andy;	state Exp;
+branches;
+next	;
+
+
+desc
+@lab14 CheatFrame
+@
+
+
+1.2
+log
+@Implemented constructor
+@
+text
+@/**
+ *  Class definition for the cheating window in a concentration card game. 
+ *
+ * @@author Andy Nguyen
+ */
+
+import javax.swing.*;
+import java.awt.*;
+import java.util.ArrayList;
+
+public class  CheatFrame extends JFrame {
+
+    /**
+     * Contructor for CheatFrame object.
+     *
+     * @@param cardButtons      An ArrayList of CardButtons that are all showing their 
+     *                                          numbers.
+     * @@param sizze                 The size (of one side) of the board (measured in cards)
+     */ 
+    public CheatFrame( ArrayList<CardButton> cardButtons,  int size) {
+        this.setLayout( new GridLayout( size, size ) );
+        this.setSize( size * 100, size * 100 );
+        this.setDefaultCloseOperation( JFrame.DISPOSE_ON_CLOSE );
+
+        for( CardButton cb : cardButtons ) {
+            this.add( cb );
+        }
+
+        this.setVisible( true );
+    }
+}
+
+
+/*
+ * CheatFrame.java
+ * 
+ * Version: 
+ *     $Id: CheatFrame.java,v 1.1 2013/12/05 16:38:20 andy Exp andy $
+ * 
+ * Revisions: 
+ *     $Log: CheatFrame.java,v $
+ *     Revision 1.1  2013/12/05 16:38:20  andy
+ *     Initial revision
+ *
+ *
+ */@
+
+
+1.1
+log
+@Initial revision
+@
+text
+@d7 3
+a9 1
+import javax.swing.JFrame;
+d21 7
+d29 1
+a29 1
+
+d38 1
+a38 1
+ *     $Id$
+d41 4
+a44 1
+ *     $Log$
+@

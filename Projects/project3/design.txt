@@ -1,0 +1,36 @@
+CSX Puzzle Solver, Project Part 2:  Water & Clock
+
+Name: Andy Nguyen
+
+
+1. Explain how your common solver is able to work with both puzzles.
+
+    Both puzzles implement the same interface so the solver doesn't 
+    need to know what kind of puzzle it is being asked to solve. It knows
+    the puzzles will have the methods it needs to do its job. Additionally,
+    the use of generics allows the solver to solve puzzles regardless of 
+    the data type the puzzle is using.
+
+2. What was the type of configuration you used for each puzzle?
+
+    The clock puzzle used ints for the hours of the clock. The water puzzle
+    used array lists of ints to represent the jugs.
+
+3. Starting with the Puzzle interface from part 1, what were the major
+changes and additions you had to make?
+
+    I had to add generic types to the Puzzle interface since each puzzle 
+    used a different data type to represent its configuration. I also had to 
+    change the getGoal method to isGoal. This puts the puzzle in charge
+    of deciding if its goal has been reached by the Solver. This is 
+    necessary because not all data types can be compared the same 
+    way.
+
+4. What problems, if any, did you encounter when re-designing your 
+project from part 1?
+
+    - Choosing the appropriate data structure for the visited collection:
+        I chose HashSet for its fast and constant time performance for basic 
+        operations such as contains.
+    - Coming up with an algorithm for getting all the neighbors for a Water 
+      configuration.

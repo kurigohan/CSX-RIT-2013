@@ -1,0 +1,110 @@
+<html><head>
+<meta http-equiv="content-type" content="text/html; charset=windows-1252">
+<title>Computer Science for Transfers Lab - Activity 3</title>
+</head>
+
+<body bgcolor="white">
+
+<h1 align="center">Computer Science for Transfers <br>Lab - Activity 3</h1>
+
+<p>The frames that you created in the previous programs are not the only type
+of displays used in programs that utilize a graphical user interface.&nbsp;
+Many times, as a program runs, information will be collected from the user
+using a dialog.&nbsp;  Dialogs are typically modal, which means that no
+other work can be done in the program until the user dismisses the dialog.
+</p>
+
+<p>Swing provides the programmer with the ability to create several different
+types of dialogs.&nbsp; For example, an instance of the
+<a href="http://www.cs.rit.edu/usr/local/jdk/docs/api/javax/swing/JFileChooser.html"><tt>JFileChooser</tt></a>
+class provides the user with the ability to select a file that can be used
+in a program.&nbsp;  Other dialogs can be used to provide the user with
+diagnostic information and confirm user selections.&nbsp; The static methods
+contained in the
+<a href="http://www.cs.rit.edu/usr/local/jdk/docs/api/javax/swing/JOptionPane.html"><tt>JOptionPane</tt></a>
+class can be used to create a wide variety of dialogs that can be used in
+a program.&nbsp;  Take a few minutes to look over the documentation for the
+<a href="http://www.cs.rit.edu/usr/local/jdk/docs/api/javax/swing/JFileChooser.html"><tt>JFileChooser</tt></a>
+and
+<a href="http://www.cs.rit.edu/usr/local/jdk/docs/api/javax/swing/JOptionPane.html"><tt>JOptionPane</tt></a>
+classes before proceeding to the next step.
+</p>
+
+<p>Write a program named, <tt>DialogViewer</tt>, that takes a single command
+argument.&nbsp;  The command line argument will be used by the program to
+determine what type of dialog to display.&nbsp;  The three valid command
+line arguments are specified in the table below:
+</p>
+
+<div align="center"><center>
+
+<table border="1" width="72%">
+  <tbody><tr>
+    <td width="28%"><strong>Command Line Argument</strong></td>
+    <td width="72%"><strong>Action</strong></td>
+  </tr>
+  <tr>
+    <td width="28%"><center>f</center></td>
+    <td width="72%">Display an instance of a 
+<a href="http://www.cs.rit.edu/usr/local/jdk/docs/api/javax/swing/JFileChooser.html"><tt>JFileChooser</tt></a>.&nbsp;
+If the user selects a file, the program will print the name of
+the file selected by the user.&nbsp; If the user did not select a file an
+appropriate message should be printed by the program.
+</td>
+  </tr>
+  <tr>
+    <td width="28%"><center>c</center></td>
+    <td width="72%">Display a confirm dialog that contains the message
+"Are you sure?".&nbsp; After the dialog has been dismissed, display the 
+type of button (i.e. Yes, No, or Cancel) that the user pressed to dismiss 
+the dialog.</td>
+  </tr>
+  <tr>
+    <td width="28%"><center>m</center></td>
+    <td width="72%">Display a message dialog box.&nbsp; The message
+displayed in the box should be your name.</td>
+  </tr>
+</tbody></table>
+</center></div>
+
+<p>You will notice that both the
+<a href="http://www.cs.rit.edu/usr/local/jdk/docs/api/javax/swing/JFileChooser.html"><tt>JFileChooser</tt></a>
+and
+<a href="http://www.cs.rit.edu/usr/local/jdk/docs/api/javax/swing/JOptionPane.html"><tt>JOptionPane</tt></a>
+classes provide a number of different methods that you can use to create
+the dialogs needed in this program.&nbsp;  In this activity, always use the
+method that requires the fewest number of parameters.&nbsp; For example,
+when you write the code to create the
+<a href="http://www.cs.rit.edu/usr/local/jdk/docs/api/javax/swing/JFileChooser.html"><tt>JFileChooser</tt></a>
+use the default constructor.&nbsp; Finally you will notice that the
+static methods in the
+<a href="http://www.cs.rit.edu/usr/local/jdk/docs/api/javax/swing/JOptionPane.html"><tt>JOptionPane</tt></a>
+class, that you will use to create the confirm dialog and the message dialog,
+require a
+<a href="http://www.cs.rit.edu/usr/local/jdk/docs/api/javax/swing/JFrame.html"><tt>JFrame</tt></a>
+as a parameter. &nbsp; If you read the documentation carefully, you will notice
+that you can pass a null object as that parameter. 
+</p>
+<p>If the program is not invoked correctly, an appropriate usage message
+should be displayed on standard error.&nbsp; Since this program utilizes
+the AWT, a thread will be created when you display the dialogs.&nbsp;
+Since a Java program does not terminate until all of the threads within
+the program have terminated, you will have to use <tt>System.exit( 0 )</tt>
+to terminate your program.
+</p>
+
+<p>Once you are convinced that the program is working correctly, submit it
+using the following command:</p>
+
+<p></p><center><tt>try csx-grd lab13-3 DialogViewer.java</tt></center><p></p>
+
+<small>
+<address>
+  Last modified November 21, 2013 by rwd.
+All rights reserved. 
+</address>
+</small>
+
+
+
+</body></html>

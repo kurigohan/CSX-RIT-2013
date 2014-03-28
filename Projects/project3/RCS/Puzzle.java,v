@@ -1,0 +1,103 @@
+head	1.2;
+access;
+symbols;
+locks
+	andy:1.2; strict;
+comment	@# @;
+
+
+1.2
+date	2013.11.22.18.07.32;	author andy;	state Exp;
+branches;
+next	1.1;
+
+1.1
+date	2013.11.22.18.01.31;	author andy;	state Exp;
+branches;
+next	;
+
+
+desc
+@Project 3 Puzzle
+@
+
+
+1.2
+log
+@Changed data types to generic
+@
+text
+@/**
+ * Puzzle interface that must be implemented by puzzles that use the Solver.
+ */
+
+import java.util.ArrayList;
+
+public interface Puzzle<E> {
+    /**
+     * Get the starting config for the puzzle.
+     *
+     * @@return the starting config
+     */
+    public E getStart();
+
+    /**
+     * Check if the config matches the goal config.
+     * 
+     * @@return true if config matches goal, false otherwise
+     */
+    public boolean isGoal( E config );
+
+    /**
+     * For an incoming config, generate and return all direct neighbors to this config.
+     *
+     * @@return the list of neighbors of the config
+     */
+    public ArrayList<E> getNeighbors( int config );
+
+}
+
+/*
+ * Puzzle.java
+ * 
+ * Version: 
+ *     $Id: Puzzle.java,v 1.1 2013/11/22 18:01:31 andy Exp andy $
+ * 
+ * Revisions: 
+ *     $Log: Puzzle.java,v $
+ *     Revision 1.1  2013/11/22 18:01:31  andy
+ *     Initial revision
+ *
+ *
+ */ @
+
+
+1.1
+log
+@Initial revision
+@
+text
+@d2 1
+a2 1
+ * Puzzle interface that must be implemented by puzzles that use the solver.
+d5 1
+a5 1
+import java.util.*;
+d7 21
+a27 9
+public interface Puzzle {
+    // Get starting config for the puzzle.
+    public int getStart();
+
+    // Get goal config for the puzzle.
+    public int getGoal();
+
+    // For an incoming config, generate and return all direct neighbors to this config.
+    public ArrayList<Integer> getNeighbors( int config );
+d35 1
+a35 1
+ *     $Id$
+d38 4
+a41 1
+ *     $Log$
+@
